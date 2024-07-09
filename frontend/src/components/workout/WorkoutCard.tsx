@@ -5,11 +5,11 @@ import {FaMagnifyingGlass} from 'react-icons/fa6';
 import {HiOutlineDotsVertical} from 'react-icons/hi';
 import {RxCross2} from 'react-icons/rx';
 import {useDeleteWorkout} from '../../hooks/workout/useDeleteWorkout';
-import {Workout} from '../../utils/types';
 import {ViewWorkoutModal} from './ViewWorkoutModal';
 import {WorkoutLogByWorkoutIdModal} from './WorkoutLogByWorkoutIdModal';
 
-export const WorkoutCard = ({workout}: {workout: Workout}) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const WorkoutCard = ({workout}: {workout: any}) => {
     const [openedViewLogs, {close: closeViewLogs, open: openViewLogs}] = useDisclosure(false);
     const [openedWorkout, {close: closeWorkout, open: openWorkout}] = useDisclosure(false);
     const deleteWorkout = useDeleteWorkout(workout.id!);

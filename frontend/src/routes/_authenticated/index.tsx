@@ -9,19 +9,19 @@ export const Route = createFileRoute('/_authenticated/')({
 });
 
 function Workouts() {
-    const {isPending: isUserPending, data, error: userQueryError} = useQuery(userQueryOptions);
+    const {isPending, data, error} = useQuery(userQueryOptions);
 
-    if (isUserPending)
+    if (isPending)
         return (
             <Center>
                 <Loader />
             </Center>
         );
-    if (userQueryError) return <div>Error: {userQueryError.message}</div>;
+    if (error) return <div>Error: {error.message}</div>;
 
     return (
         <div className="p-2">
-            <h3>Welcome Home! {data.userName}</h3>
+            <h3>Welcome Home! {data.user.given_name}</h3>
 
             <WorkoutHomePage />
         </div>

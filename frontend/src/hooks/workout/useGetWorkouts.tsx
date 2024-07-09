@@ -1,20 +1,13 @@
 import {useQuery} from '@tanstack/react-query';
-import {getToken} from '../../utils/token';
-import {Workout} from '../../utils/types';
+import {api} from '../../lib/api';
 
 export const useWorkouts = () => {
     const getWorkouts = async () => {
-        const response = await fetch('/api/workouts', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + getToken(),
-            },
-        });
-
-        return await response.json();
+        const response = await api.workouts.$get();
+        const data = await response.json();
+        return data;
     };
-    const {data, error, isLoading, isError, isSuccess} = useQuery<Workout[]>({
+    const {data, error, isLoading, isError, isSuccess} = useQuery({
         queryKey: ['workouts'],
         queryFn: getWorkouts,
     });

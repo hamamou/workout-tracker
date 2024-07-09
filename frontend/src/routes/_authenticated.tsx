@@ -1,4 +1,4 @@
-import {createFileRoute, Link, Outlet} from '@tanstack/react-router';
+import {createFileRoute, Outlet} from '@tanstack/react-router';
 import {userQueryOptions} from '../lib/api';
 
 const Component = () => {
@@ -7,7 +7,7 @@ const Component = () => {
     if (!user) {
         return (
             <div>
-                You have to <Link to="/login"> Login</Link>
+                You have to <a href="/api/login"> Login</a>
             </div>
         );
     }
@@ -21,7 +21,7 @@ export const Route = createFileRoute('/_authenticated')({
             const queryClient = context.queryClient;
             const user = await queryClient.fetchQuery(userQueryOptions);
 
-            return {user: user.userName};
+            return {user};
         } catch (error) {
             return {user: null};
         }
