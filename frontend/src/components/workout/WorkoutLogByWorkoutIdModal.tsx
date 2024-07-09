@@ -7,7 +7,7 @@ export const WorkoutLogByWorkoutIdModal = ({
     opened,
     close,
 }: {
-    workoutId: string;
+    workoutId: number;
     opened: boolean;
     close: () => void;
 }) => {

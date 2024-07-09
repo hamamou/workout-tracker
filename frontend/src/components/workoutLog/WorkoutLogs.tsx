@@ -1,28 +1,38 @@
 import {Button, Checkbox, Group, NumberInput, Stack, Table, Text} from '@mantine/core';
 import {useForm} from '@mantine/form';
 import {FaRegSave} from 'react-icons/fa';
-import {useCreateWorkoutLog} from '../../../hooks/workoutLog/useCreateWorkoutLog';
-import {ExerciseLog, Workout} from '../../../utils/types';
+import {z} from 'zod';
+import {type ExerciseLog} from '../../../../server/routes/workoutLogs';
+import {Workout} from '../../../../server/routes/workouts';
+import {useCreateWorkoutLog} from '../../hooks/workoutLog/useCreateWorkoutLog';
 
-type WorkoutLog = {
-    workoutId: string | undefined;
-    exerciseLogs: {
-        exerciseId: string | undefined;
-        setLogs: {
-            repetition: number;
-            weight: number;
-            completed: boolean;
-        }[];
-    }[];
-};
+const exerciseLogSchema = z.object({
+    exerciseId: z.number(),
+    setLogs: z.array(
+        z.object({
+            weight: z.number(),
+            repetition: z.number(),
+            completed: z.boolean(),
+        }),
+    ),
+});
+
+const WorkoutLogsWithCompletedSchema = z.object({
+    workoutId: z.number().int().positive().min(1),
+    loggedAt: z.date(),
+    exerciseLogs: z.array(exerciseLogSchema),
+});
+
+type WorkoutLogsWithCompleted = z.infer<typeof WorkoutLogsWithCompletedSchema>;
 
 export const WorkoutLogs = ({workout}: {workout: Workout}) => {
     const mutation = useCreateWorkoutLog();
-    const form = useForm<WorkoutLog>({
+    const form = useForm<WorkoutLogsWithCompleted>({
         initialValues: {
             workoutId: workout.id,
+            loggedAt: new Date(),
             exerciseLogs: workout.exerciseSets.map((exerciseSet) => ({
-                exerciseId: exerciseSet.exercise?.id,
+                exerciseId: exerciseSet.exercise?.id || 0,
                 setLogs: exerciseSet.sets.map((set) => ({
                     repetition: set.repetition,
                     weight: set.weight,
@@ -32,7 +42,7 @@ export const WorkoutLogs = ({workout}: {workout: Workout}) => {
         },
     });
 
-    const removeEmptyExerciseLogs = (values: WorkoutLog) => {
+    const removeEmptyExerciseLogs = (values: WorkoutLogsWithCompleted) => {
         return values.exerciseLogs
             .map((exerciseLog) => {
                 const sets = exerciseLog.setLogs.filter((setLog) => setLog.completed);
@@ -81,7 +91,7 @@ export const WorkoutLogs = ({workout}: {workout: Workout}) => {
         <form
             onSubmit={form.onSubmit((values) => {
                 const exerciseLogs = removeEmptyExerciseLogs(values);
-                mutation.mutate({workoutId: values.workoutId || '', exerciseLogs, loggedAt: new Date().toISOString()});
+                mutation.mutate({workoutId: values.workoutId || 0, exerciseLogs, loggedAt: new Date()});
             })}>
             <Stack>
                 <Group justify="space-between">

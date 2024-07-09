@@ -1,5 +1,6 @@
 import {Button, Card, Group, Menu, Text, rem} from '@mantine/core';
 import {useDisclosure} from '@mantine/hooks';
+import {Workout} from '@server/routes/workouts';
 import {Link} from '@tanstack/react-router';
 import {FaMagnifyingGlass} from 'react-icons/fa6';
 import {HiOutlineDotsVertical} from 'react-icons/hi';
@@ -8,8 +9,7 @@ import {useDeleteWorkout} from '../../hooks/workout/useDeleteWorkout';
 import {ViewWorkoutModal} from './ViewWorkoutModal';
 import {WorkoutLogByWorkoutIdModal} from './WorkoutLogByWorkoutIdModal';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const WorkoutCard = ({workout}: {workout: any}) => {
+export const WorkoutCard = ({workout}: {workout: Workout}) => {
     const [openedViewLogs, {close: closeViewLogs, open: openViewLogs}] = useDisclosure(false);
     const [openedWorkout, {close: closeWorkout, open: openWorkout}] = useDisclosure(false);
     const deleteWorkout = useDeleteWorkout(workout.id!);
