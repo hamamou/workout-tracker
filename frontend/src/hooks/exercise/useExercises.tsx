@@ -1,13 +1,9 @@
 import {useQuery} from '@tanstack/react-query';
+import {api} from '../../lib/api';
 
 export const useExercises = () => {
     const getExercises = async () => {
-        const response = await fetch('/api/exercise/exercises', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+        const response = await api.exercises.$get();
 
         return await response.json();
     };

@@ -59,7 +59,22 @@ const workoutSchema = z.object({
 
 export type Workout = z.infer<typeof workoutSchema>;
 
-const createWorkoutSchema = workoutSchema.omit({id: true});
+const createWorkoutSchema = z.object({
+    name: z.string().min(3),
+    description: z.string(),
+    exerciseSets: z.array(
+        z.object({
+            exerciseId: z.number(),
+            sets: z.array(
+                z.object({
+                    weight: z.number(),
+                    repetition: z.number(),
+                }),
+            ),
+        }),
+    ),
+});
+export type CreateWorkout = z.infer<typeof createWorkoutSchema>;
 
 export const workoutsRoutes = new Hono()
     .get('/', (c) => {
@@ -77,7 +92,24 @@ export const workoutsRoutes = new Hono()
     })
     .post('/', zValidator('json', createWorkoutSchema), async (c) => {
         const workout = c.req.valid('json');
-        workouts.push({...workout, id: workouts.length + 1});
+        workouts.push({
+            id: workouts.length + 1,
+            name: workout.name,
+            description: workout.description,
+            exerciseSets: workout.exerciseSets.map((ex) => {
+                return {
+                    exerciseId: ex.exerciseId,
+                    name: 'Fake Name',
+                    sets: ex.sets.map((set) => {
+                        return {
+                            weight: set.weight,
+                            repetition: set.repetition,
+                        };
+                    }),
+                };
+            }),
+        });
+        console.log(workouts);
 
         return c.json({workout}, 201);
     })

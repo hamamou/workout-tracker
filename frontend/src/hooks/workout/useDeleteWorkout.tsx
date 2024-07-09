@@ -1,16 +1,10 @@
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {getToken} from '../../utils/token';
+import {api} from '../../lib/api';
 
 export const useDeleteWorkout = (workoutId: string) => {
     const deleteWorkout = async () => {
-
-        await fetch(`/api/workouts/${workoutId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: 'Bearer ' +  getToken(),
-            },
-        });
+        const response = await api.workouts[':id{[0-9]+}'].$delete({param: {id: workoutId}});
+        return await response.json();
     };
 
     const queryClient = useQueryClient();

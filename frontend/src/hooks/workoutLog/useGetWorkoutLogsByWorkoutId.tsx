@@ -1,21 +1,14 @@
 import {useQuery} from '@tanstack/react-query';
-import {getToken} from '../../utils/token';
-import {WorkoutLog} from '../../utils/types';
+import {api} from '../../lib/api';
 
 export const useGetWorkoutLogsByWorkoutId = (workoutId: string) => {
     const getWorkoutLogsByWorkoutId = async () => {
-        const response = await fetch(`/api/workoutLog/byWorkoutLogsByWorkoutId/${workoutId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + getToken(),
-            },
-        });
+        const response = await api.workoutLogs.$get();
 
         return await response.json();
     };
 
-    return useQuery<WorkoutLog[]>({
+    return useQuery({
         queryKey: ['getWorkoutLogsByWorkoutId', workoutId],
         queryFn: getWorkoutLogsByWorkoutId,
         enabled: !!workoutId,

@@ -10,6 +10,7 @@ export const useWorkouts = () => {
     const {data, error, isLoading, isError, isSuccess} = useQuery({
         queryKey: ['workouts'],
         queryFn: getWorkouts,
+        staleTime: 1000 * 5,
     });
 
     return {data, error, isLoading, isError, isSuccess};

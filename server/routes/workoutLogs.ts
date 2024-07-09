@@ -21,7 +21,9 @@ const workoutLogSchema = z.object({
 
 const createWorkoutLogSchema = workoutLogSchema.omit({id: true});
 
-type WorkoutLog = z.infer<typeof workoutLogSchema>;
+export type createWorkoutLog = z.infer<typeof createWorkoutLogSchema>;
+
+export type WorkoutLog = z.infer<typeof workoutLogSchema>;
 
 const workoutLogs: WorkoutLog[] = [
     {

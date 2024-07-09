@@ -3,7 +3,7 @@ import {Hono} from 'hono';
 import {logger} from 'hono/logger';
 import {AuthRoute} from './routes/auth';
 import {ExerciseRoutes} from './routes/exercise';
-import {workoutLogsRoutes} from './routes/workoutLog';
+import {workoutLogsRoutes} from './routes/workoutLogs';
 import {workoutsRoutes} from './routes/workouts';
 
 const app = new Hono();

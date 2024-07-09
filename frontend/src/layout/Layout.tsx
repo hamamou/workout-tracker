@@ -1,12 +1,17 @@
 import {AppShell, Burger, Group, Loader, Stack, UnstyledButton} from '@mantine/core';
 import {useDisclosure} from '@mantine/hooks';
+import {useQuery} from '@tanstack/react-query';
 import {Outlet, useNavigate} from '@tanstack/react-router';
 import {Suspense} from 'react';
-import {cookieName} from '../utils/constants';
+import {userQueryOptions} from '../lib/api';
 
 export const Layout = () => {
     const [opened, {toggle}] = useDisclosure();
     const navigate = useNavigate();
+
+    const {data, isLoading, error} = useQuery(userQueryOptions);
+    if (error) return <div>Error: {error.message}</div>;
+    if (isLoading) return null;
 
     return (
         <AppShell
@@ -23,17 +28,13 @@ export const Layout = () => {
                     <Group justify="space-between" style={{flex: 1}}>
                         <img src="logo.jpg" alt="logo" width={40} height={40} />
                         <Group ml="xl" gap={0} visibleFrom="sm" p={4}>
-                            {localStorage.getItem(cookieName) ? (
+                            {data?.user ? (
                                 <Group gap={20}>
                                     <UnstyledButton onClick={() => navigate({to: '/'})}>Home</UnstyledButton>
                                     <UnstyledButton onClick={() => navigate({to: '/about'})}>About</UnstyledButton>
-                                    <UnstyledButton
-                                        onClick={() => {
-                                            localStorage.removeItem(cookieName);
-                                            navigate({to: '/login'});
-                                        }}>
+                                    <a href="/api/logout" className="text-inherit no-underline">
                                         Logout
-                                    </UnstyledButton>
+                                    </a>
                                 </Group>
                             ) : null}
                         </Group>
