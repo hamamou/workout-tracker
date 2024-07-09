@@ -1,5 +1,5 @@
 import {Modal, Stack, Table, Text} from '@mantine/core';
-import {ExerciseSet, Workout} from '../../utils/types';
+import {ExerciseSet, Workout} from '../../../../server/routes/workouts';
 
 export const ViewWorkoutModal = ({workout, opened, close}: {workout: Workout; opened: boolean; close: () => void}) => {
     const rows = (field: ExerciseSet) => {

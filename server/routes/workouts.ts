@@ -53,26 +53,34 @@ const workoutSchema = z.object({
                     repetition: z.number(),
                 }),
             ),
+            exercise: z
+                .object({
+                    id: z.number(),
+                    name: z.string(),
+                })
+                .optional(),
         }),
     ),
 });
 
 export type Workout = z.infer<typeof workoutSchema>;
 
+const exerciseSetSchema = z.object({
+    exerciseId: z.number(),
+    sets: z.array(
+        z.object({
+            weight: z.number(),
+            repetition: z.number(),
+        }),
+    ),
+});
+
+export type ExerciseSet = z.infer<typeof exerciseSetSchema>;
+
 const createWorkoutSchema = z.object({
     name: z.string().min(3),
     description: z.string(),
-    exerciseSets: z.array(
-        z.object({
-            exerciseId: z.number(),
-            sets: z.array(
-                z.object({
-                    weight: z.number(),
-                    repetition: z.number(),
-                }),
-            ),
-        }),
-    ),
+    exerciseSets: z.array(exerciseSetSchema),
 });
 export type CreateWorkout = z.infer<typeof createWorkoutSchema>;
 
@@ -109,7 +117,6 @@ export const workoutsRoutes = new Hono()
                 };
             }),
         });
-        console.log(workouts);
 
         return c.json({workout}, 201);
     })

@@ -1,7 +1,6 @@
 import {Center, Group, Loader, Modal, Stack} from '@mantine/core';
 import {useMemo} from 'react';
 import {useGetWorkoutLogsByWorkoutId} from '../../hooks/workoutLog/useGetWorkoutLogsByWorkoutId';
-import {WorkoutLog} from '../../utils/types';
 
 export const WorkoutLogByWorkoutIdModal = ({
     workoutId,
@@ -33,7 +32,7 @@ export const WorkoutLogByWorkoutIdModal = ({
                         <Center>No logs</Center>
                     ) : (
                         <Stack>
-                            {logs.map((log: WorkoutLog) => {
+                            {logs.map((log) => {
                                 const date = new Date(log.loggedAt!);
                                 const formattedDate = date.toDateString().slice(0, -4);
                                 const hours = String(date.getHours()).padStart(2, '0');

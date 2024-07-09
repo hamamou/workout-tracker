@@ -8,9 +8,11 @@ export const useGetWorkoutLogsByWorkoutId = (workoutId: string) => {
         return await response.json();
     };
 
-    return useQuery({
+    const {data, error, isLoading, isError, isSuccess} = useQuery({
         queryKey: ['getWorkoutLogsByWorkoutId', workoutId],
         queryFn: getWorkoutLogsByWorkoutId,
         enabled: !!workoutId,
     });
+
+    return {data, error, isLoading, isError, isSuccess};
 };

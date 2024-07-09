@@ -1,21 +1,31 @@
 import {Button, Center, Divider, Group, Loader, NumberInput, Select, Stack, Table, Text} from '@mantine/core';
 import {UseFormReturnType} from '@mantine/form';
 import {BiPlus} from 'react-icons/bi';
+import {Exercise} from '../../../../server/routes/exercise';
+import {type CreateWorkout, type ExerciseSet} from '../../../../server/routes/workouts';
 import {useExercises} from '../../hooks/exercise/useExercises';
-import {Exercise, ExerciseSet, Workout} from '../../utils/types';
 
-export const CreateWorkoutExercise = ({form}: {form: UseFormReturnType<Workout, (values: Workout) => Workout>}) => {
-    const exercisesQuery = useExercises();
+export const CreateWorkoutExercise = ({
+    form,
+}: {
+    form: UseFormReturnType<CreateWorkout, (values: CreateWorkout) => CreateWorkout>;
+}) => {
+    const {data, error, isLoading} = useExercises();
+
+    if (error) {
+        return <div>{error.message}</div>;
+    }
 
     const updateExerciseId = (value: string, index: number) => {
-        if (value) {
-            const exerciseId = exercisesQuery.data.find((exercise: Exercise) => exercise.name === value)?.id;
+        if (value && data) {
+            const exerciseId = data.find((exercise: Exercise) => exercise.name === value)?.id;
+            if (!exerciseId) {
+                return;
+            }
             const exerciseSets = form.values.exerciseSets;
             exerciseSets[index].exerciseId = exerciseId;
 
             form.setValues({exerciseSets: exerciseSets});
-
-            console.log(form.values.exerciseSets[index]);
         }
     };
 
@@ -43,7 +53,7 @@ export const CreateWorkoutExercise = ({form}: {form: UseFormReturnType<Workout, 
         ));
     };
 
-    if (exercisesQuery.isLoading) {
+    if (isLoading) {
         return (
             <Center>
                 <Loader />
@@ -80,7 +90,7 @@ export const CreateWorkoutExercise = ({form}: {form: UseFormReturnType<Workout, 
                             <Stack>
                                 <Select
                                     placeholder="Choose exercise"
-                                    data={exercisesQuery.data.map((exercise: Exercise) => exercise.name)}
+                                    data={data?.map((exercise: Exercise) => exercise.name)}
                                     onChange={(value) => {
                                         if (value) {
                                             updateExerciseId(value, index);

@@ -6,7 +6,7 @@ const exerciseSchema = z.object({
     name: z.string().min(3),
 });
 
-type Exercise = z.infer<typeof exerciseSchema>;
+export type Exercise = z.infer<typeof exerciseSchema>;
 
 const exercises: Exercise[] = [
     {

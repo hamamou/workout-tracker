@@ -7,19 +7,17 @@ const client = hc<ApiRoutes>('/');
 export const api = client.api;
 
 export const getCurrentUser = async () => {
-    try {
-        const response = await api.me.$get();
-        if (!response.ok) {
-            throw new Error('Unauthorized');
-        }
-        return await response.json();
-    } catch (error) {
-        throw new Error('Server Error');
+    const response = await api.me.$get();
+    if (!response.ok) {
+        return null;
     }
+
+    return await response.json();
 };
 
 export const userQueryOptions = queryOptions({
     queryKey: ['me'],
     queryFn: getCurrentUser,
     staleTime: Infinity,
+    retry: false,
 });

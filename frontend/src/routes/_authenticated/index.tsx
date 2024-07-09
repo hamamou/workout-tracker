@@ -17,11 +17,16 @@ function Workouts() {
                 <Loader />
             </Center>
         );
-    if (error) return <div>Error: {error.message}</div>;
+    if (error || !data)
+        return (
+            <div>
+                Login <a href="/api/login"></a>
+            </div>
+        );
 
     return (
         <div className="p-2">
-            <h3>Welcome Home! {data.user.given_name}</h3>
+            <h3>Welcome Home! {data?.user.given_name}</h3>
 
             <WorkoutHomePage />
         </div>

@@ -23,6 +23,7 @@ export const Route = createFileRoute('/_authenticated')({
 
             return {user};
         } catch (error) {
+            console.log('Failed to get user');
             return {user: null};
         }
     },
