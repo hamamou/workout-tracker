@@ -11,10 +11,10 @@ const app = new Hono();
 app.use('*', logger());
 const apiRoute = app
     .basePath('/api')
+    .route('/', AuthRoute)
     .route('/workouts', workoutsRoutes)
     .route('/workoutLogs', workoutLogsRoutes)
-    .route('/exercises', ExerciseRoutes)
-    .route('/authRoute', AuthRoute);
+    .route('/exercises', ExerciseRoutes);
 
 app.use('/*', serveStatic({root: './frontend/dist'}));
 app.use('/*', serveStatic({root: './frontend/dist/index.html'}));
