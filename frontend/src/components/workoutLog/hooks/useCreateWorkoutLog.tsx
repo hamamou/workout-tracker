@@ -1,7 +1,7 @@
+import {api} from '@lib/api';
+import {type createWorkoutLog} from '@server/routes/workoutLogs';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {useNavigate} from '@tanstack/react-router';
-import {createWorkoutLog} from '../../../../server/routes/workoutLogs';
-import {api} from '../../lib/api';
 
 export const useCreateWorkoutLog = () => {
     const navigate = useNavigate();

@@ -18,7 +18,9 @@
         "jsx": "react-jsx",
         "paths": {
             "@/*": ["./src/*"],
-            "@test-utils": ["./test-utils"]
+            "@test-utils": ["./test-utils"],
+            "@server/*": ["../server/*"],
+            "@lib/*": ["./src/lib/*"]
         }
     },
     "include": ["src", "test-utils"]

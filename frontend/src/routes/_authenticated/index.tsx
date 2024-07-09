@@ -1,8 +1,8 @@
+import {userQueryOptions} from '@lib/api';
 import {Center, Loader} from '@mantine/core';
 import {useQuery} from '@tanstack/react-query';
 import {createFileRoute} from '@tanstack/react-router';
 import {WorkoutHomePage} from '../../components/workout/WorkoutHomePage';
-import {userQueryOptions} from '../../lib/api';
 
 export const Route = createFileRoute('/_authenticated/')({
     component: Workouts,

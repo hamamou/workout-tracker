@@ -1,5 +1,5 @@
+import {api} from '@lib/api';
 import {useQuery} from '@tanstack/react-query';
-import {api} from '../../lib/api';
 
 export const useGetWorkoutById = (workoutId: string) => {
     const getWorkoutById = async () => {

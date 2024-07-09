@@ -1,6 +1,6 @@
+import {api} from '@lib/api';
+import {type CreateWorkout} from '@server/routes/workouts';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {CreateWorkout} from '../../../../server/routes/workouts';
-import {api} from '../../lib/api';
 
 export const useCreateWorkout = () => {
     const createWorkout = async (workout: CreateWorkout) => {

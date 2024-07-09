@@ -1,9 +1,9 @@
 import {Button, Divider, Group, Modal, Stack, TextInput} from '@mantine/core';
 import {useForm} from '@mantine/form';
+import {type CreateWorkout} from '@server/routes/workouts';
 import {MdOutlineCreate} from 'react-icons/md';
-import {CreateWorkout} from '../../../../server/routes/workouts';
-import {useCreateWorkout} from '../../hooks/workout/useCreateWorkout';
 import {CreateWorkoutExercise} from './CreateWorkoutExercise';
+import {useCreateWorkout} from './hooks/useCreateWorkout';
 
 export const CreateWorkoutModal = ({opened, close}: {opened: boolean; close: () => void}) => {
     const createWorkoutMutation = useCreateWorkout();

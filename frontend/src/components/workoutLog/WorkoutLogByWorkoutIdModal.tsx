@@ -1,6 +1,6 @@
 import {Center, Group, Loader, Modal, Stack} from '@mantine/core';
 import {useMemo} from 'react';
-import {useGetWorkoutLogsByWorkoutId} from '../../hooks/workoutLog/useGetWorkoutLogsByWorkoutId';
+import {useGetWorkoutLogsByWorkoutId} from './hooks/useGetWorkoutLogsByWorkoutId';
 
 export const WorkoutLogByWorkoutIdModal = ({
     workoutId,

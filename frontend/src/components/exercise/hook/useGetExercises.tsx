@@ -1,7 +1,7 @@
+import {api} from '@lib/api';
 import {useQuery} from '@tanstack/react-query';
-import {api} from '../../lib/api';
 
-export const useExercises = () => {
+export const useGetExercises = () => {
     const getExercises = async () => {
         const response = await api.exercises.$get();
 

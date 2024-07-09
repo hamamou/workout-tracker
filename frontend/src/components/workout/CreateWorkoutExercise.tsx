@@ -1,16 +1,16 @@
 import {Button, Center, Divider, Group, Loader, NumberInput, Select, Stack, Table, Text} from '@mantine/core';
 import {UseFormReturnType} from '@mantine/form';
+import {type Exercise} from '@server/routes/exercise';
+import {type CreateWorkout, type ExerciseSet} from '@server/routes/workouts';
 import {BiPlus} from 'react-icons/bi';
-import {Exercise} from '../../../../server/routes/exercise';
-import {type CreateWorkout, type ExerciseSet} from '../../../../server/routes/workouts';
-import {useExercises} from '../../hooks/exercise/useExercises';
+import {useGetExercises} from '../exercise/hook/useGetExercises';
 
 export const CreateWorkoutExercise = ({
     form,
 }: {
     form: UseFormReturnType<CreateWorkout, (values: CreateWorkout) => CreateWorkout>;
 }) => {
-    const {data, error, isLoading} = useExercises();
+    const {data, error, isLoading} = useGetExercises();
 
     if (error) {
         return <div>{error.message}</div>;

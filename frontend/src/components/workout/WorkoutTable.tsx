@@ -1,6 +1,6 @@
 import {Group, Loader, SimpleGrid} from '@mantine/core';
-import {useWorkouts} from '../../hooks/workout/useGetWorkouts';
 import {WorkoutCard} from './WorkoutCard';
+import {useWorkouts} from './hooks/useGetWorkouts';
 
 export const WorkoutTable = () => {
     const {data, error, isLoading} = useWorkouts();

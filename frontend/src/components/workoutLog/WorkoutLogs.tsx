@@ -1,10 +1,10 @@
 import {Button, Checkbox, Group, NumberInput, Stack, Table, Text} from '@mantine/core';
 import {useForm} from '@mantine/form';
+import {type ExerciseLog} from '@server/routes/workoutLogs';
+import {type Workout} from '@server/routes/workouts';
 import {FaRegSave} from 'react-icons/fa';
 import {z} from 'zod';
-import {type ExerciseLog} from '../../../../server/routes/workoutLogs';
-import {Workout} from '../../../../server/routes/workouts';
-import {useCreateWorkoutLog} from '../../hooks/workoutLog/useCreateWorkoutLog';
+import {useCreateWorkoutLog} from './hooks/useCreateWorkoutLog';
 
 const exerciseLogSchema = z.object({
     exerciseId: z.number(),

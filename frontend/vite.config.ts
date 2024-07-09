@@ -12,4 +12,10 @@ export default defineConfig({
             },
         },
     },
+    resolve: {
+        alias: {
+            '@server': new URL('../server', import.meta.url).pathname,
+            '@lib': new URL('./src/lib', import.meta.url).pathname,
+        },
+    },
 });
