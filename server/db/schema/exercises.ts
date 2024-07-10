@@ -4,7 +4,7 @@ export const exercises = pgTable(
     'exercises',
     {
         id: serial('id').primaryKey(),
-        name: text('name'),
+        name: text('name').notNull(),
     },
     (exercises) => {
         return {

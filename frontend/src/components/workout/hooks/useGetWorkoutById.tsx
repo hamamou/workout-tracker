@@ -10,6 +10,7 @@ export const useGetWorkoutById = (workoutId: string) => {
     const {data, error, isLoading, isError, isSuccess} = useQuery({
         queryKey: ['workout', workoutId],
         queryFn: getWorkoutById,
+        staleTime: 1000 * 60 * 5,
     });
 
     return {data, error, isLoading, isError, isSuccess};

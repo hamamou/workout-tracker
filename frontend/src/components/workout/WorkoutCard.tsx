@@ -1,6 +1,6 @@
 import {Button, Card, Group, Menu, Text, rem} from '@mantine/core';
 import {useDisclosure} from '@mantine/hooks';
-import {type Workout} from '@server/routes/workouts';
+import {type Workout} from '@server/routes/workouts/types';
 import {Link} from '@tanstack/react-router';
 import {FaMagnifyingGlass} from 'react-icons/fa6';
 import {HiOutlineDotsVertical} from 'react-icons/hi';
@@ -60,7 +60,7 @@ export const WorkoutCard = ({workout}: {workout: Workout}) => {
             </Link>
 
             {workout && openedWorkout && (
-                <ViewWorkoutModal opened={openedWorkout} workout={workout} close={closeWorkout} />
+                <ViewWorkoutModal opened={openedWorkout} workoutId={workout.id} close={closeWorkout} />
             )}
 
             {workout.id && openedViewLogs && (
