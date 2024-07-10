@@ -16,7 +16,7 @@ const workoutLogSchema = z.object({
     id: z.number().int().positive().min(1),
     name: z.string().optional(),
     workoutId: z.number().int().positive().min(1),
-    loggedAt: z.date(),
+    loggedAt: z.string(),
     exerciseLogs: z.array(exerciseLogSchema),
 });
 export const createWorkoutLogSchema = workoutLogSchema.omit({id: true});

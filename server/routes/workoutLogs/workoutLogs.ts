@@ -34,6 +34,8 @@ export const workoutLogsRoutes = new Hono()
     .post('/', getUser, zValidator('json', createWorkoutLogSchema), async (c) => {
         const createWorkoutLog = c.req.valid('json');
 
+        console.log(createWorkoutLog);
+
         let workoutLog;
         await db.transaction(async (tx) => {
             workoutLog = await tx

@@ -53,7 +53,7 @@ export const WorkoutCard = ({workout}: {workout: Workout}) => {
                 {workout.description}
             </Text>
 
-            <Link to={`/workout-log/${workout.id}`} className="text-inherit no-underline">
+            <Link to={`/workout-logs/${workout.id}`} className="text-inherit no-underline">
                 <Button color="blue" fullWidth mt="md" radius="md">
                     Start workout
                 </Button>

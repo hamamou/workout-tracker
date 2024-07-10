@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as AboutImport } from './routes/about'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedWorkoutLogsWorkoutIdImport } from './routes/_authenticated/workout-logs.$workoutId'
 
 // Create/Update Routes
 
@@ -31,6 +32,12 @@ const AuthenticatedIndexRoute = AuthenticatedIndexImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+
+const AuthenticatedWorkoutLogsWorkoutIdRoute =
+  AuthenticatedWorkoutLogsWorkoutIdImport.update({
+    path: '/workout-logs/$workoutId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -57,6 +64,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/workout-logs/$workoutId': {
+      id: '/_authenticated/workout-logs/$workoutId'
+      path: '/workout-logs/$workoutId'
+      fullPath: '/workout-logs/$workoutId'
+      preLoaderRoute: typeof AuthenticatedWorkoutLogsWorkoutIdImport
+      parentRoute: typeof AuthenticatedImport
+    }
   }
 }
 
@@ -65,6 +79,7 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren({
   AuthenticatedRoute: AuthenticatedRoute.addChildren({
     AuthenticatedIndexRoute,
+    AuthenticatedWorkoutLogsWorkoutIdRoute,
   }),
   AboutRoute,
 })
@@ -84,7 +99,8 @@ export const routeTree = rootRoute.addChildren({
     "/_authenticated": {
       "filePath": "_authenticated.tsx",
       "children": [
-        "/_authenticated/"
+        "/_authenticated/",
+        "/_authenticated/workout-logs/$workoutId"
       ]
     },
     "/about": {
@@ -92,6 +108,10 @@ export const routeTree = rootRoute.addChildren({
     },
     "/_authenticated/": {
       "filePath": "_authenticated/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/workout-logs/$workoutId": {
+      "filePath": "_authenticated/workout-logs.$workoutId.tsx",
       "parent": "/_authenticated"
     }
   }

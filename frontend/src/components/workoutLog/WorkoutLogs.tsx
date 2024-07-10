@@ -19,7 +19,7 @@ const exerciseLogSchema = z.object({
 
 const WorkoutLogsWithCompletedSchema = z.object({
     workoutId: z.number().int().positive().min(1),
-    loggedAt: z.date(),
+    loggedAt: z.string(),
     exerciseLogs: z.array(exerciseLogSchema),
 });
 
@@ -30,10 +30,10 @@ export const WorkoutLogs = ({workout}: {workout: Workout}) => {
     const form = useForm<WorkoutLogsWithCompleted>({
         initialValues: {
             workoutId: workout.id,
-            loggedAt: new Date(),
+            loggedAt: new Date().toString(),
             exerciseLogs:
                 workout.exerciseSets?.map((exerciseSet) => ({
-                    exerciseId: exerciseSet.exercise?.id || 0,
+                    exerciseId: exerciseSet.exerciseId,
                     setLogs: exerciseSet.sets.map((set) => ({
                         repetition: set.repetition,
                         weight: set.weight,
@@ -92,7 +92,11 @@ export const WorkoutLogs = ({workout}: {workout: Workout}) => {
         <form
             onSubmit={form.onSubmit((values) => {
                 const exerciseLogs = removeEmptyExerciseLogs(values);
-                mutation.mutate({workoutId: values.workoutId || 0, exerciseLogs, loggedAt: new Date()});
+
+                const updatedValues = {...values, exerciseLogs: exerciseLogs};
+                console.log(updatedValues);
+
+                mutation.mutate(updatedValues);
             })}>
             <Stack>
                 <Group justify="space-between">
@@ -105,27 +109,29 @@ export const WorkoutLogs = ({workout}: {workout: Workout}) => {
                         </Group>
                     </Button>
                 </Group>
-                {form.values.exerciseLogs.map((exerciseSet, index) => (
-                    <Stack key={index}>
-                        <Text fw="bold">{workout.exerciseSets[index].exercise?.name}</Text>
+                {form.values.exerciseLogs.map((exerciseSet, index) => {
+                    return (
+                        <Stack key={index}>
+                            <Text fw="bold">{workout.exerciseSets![index].name}</Text>
 
-                        <Table horizontalSpacing="lg" mx="lg">
-                            <Table.Thead>
-                                <Table.Tr>
-                                    <Table.Th />
-                                    <Table.Th>
-                                        <Text size="sm">Reps</Text>
-                                    </Table.Th>
-                                    <Table.Th>
-                                        <Text size="sm">Weight</Text>
-                                    </Table.Th>
-                                    <Table.Th />
-                                </Table.Tr>
-                            </Table.Thead>
-                            <Table.Tbody>{rows(exerciseSet, index)}</Table.Tbody>
-                        </Table>
-                    </Stack>
-                ))}
+                            <Table horizontalSpacing="lg" mx="lg">
+                                <Table.Thead>
+                                    <Table.Tr>
+                                        <Table.Th />
+                                        <Table.Th>
+                                            <Text size="sm">Reps</Text>
+                                        </Table.Th>
+                                        <Table.Th>
+                                            <Text size="sm">Weight</Text>
+                                        </Table.Th>
+                                        <Table.Th />
+                                    </Table.Tr>
+                                </Table.Thead>
+                                <Table.Tbody>{rows(exerciseSet, index)}</Table.Tbody>
+                            </Table>
+                        </Stack>
+                    );
+                })}
             </Stack>
         </form>
     );

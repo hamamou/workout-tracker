@@ -43,6 +43,13 @@
       "when": 1720631591307,
       "tag": "0005_brave_stingray",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1720641813743,
+      "tag": "0006_loose_jigsaw",
+      "breakpoints": true
     }
   ]
 }
