@@ -1,55 +1,60 @@
 import {zValidator} from '@hono/zod-validator';
+import {and, eq} from 'drizzle-orm';
 import {Hono} from 'hono';
-import {createWorkoutLogSchema, WorkoutLog} from './types';
+import {db} from '../../db';
+import {
+    exerciseLogs as exerciseLogsTable,
+    setLogs as setLogsTable,
+    workoutLogs as workoutLogsTable,
+} from '../../db/schema/workoutLogs';
+import {getUser} from '../../kinde';
+import {createWorkoutLogSchema} from './types';
 
-const workoutLogs: WorkoutLog[] = [
-    {
-        id: 1,
-        workoutId: 1,
-        loggedAt: new Date(),
-        exerciseLogs: [
-            {
-                exerciseId: 1,
-                setLogs: [
-                    {
-                        weight: 100,
-                        repetition: 10,
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        id: 2,
-        workoutId: 2,
-        loggedAt: new Date(),
-        exerciseLogs: [
-            {
-                exerciseId: 2,
-                setLogs: [
-                    {
-                        weight: 200,
-                        repetition: 20,
-                    },
-                ],
-            },
-        ],
-    },
-];
 export const workoutLogsRoutes = new Hono()
-    .get('/', (c) => {
+    .get('/', getUser, async (c) => {
+        const user = c.var.user;
+        const workoutLogs = await db.select().from(workoutLogsTable).where(eq(workoutLogsTable.userId, user.id));
         return c.json(workoutLogs);
     })
-    .get('/:id', (c) => {
+    .get('/:id', getUser, async (c) => {
         const id = parseInt(c.req.param('id'));
-        const workoutLog = workoutLogs.find((workoutLog) => workoutLog.id === id);
+        const user = c.var.user;
+        const workoutLog = await db
+            .select()
+            .from(workoutLogsTable)
+            .where(and(eq(workoutLogsTable.id, id), eq(workoutLogsTable.userId, user.id)));
+
         if (!workoutLog) {
             return c.notFound();
         }
-        return c.json(workoutLog);
+        return c.json(workoutLog[0]);
     })
-    .post('/', zValidator('json', createWorkoutLogSchema), (c) => {
-        const workoutLog = c.req.valid('json');
-        workoutLogs.push({...workoutLog, id: workoutLogs.length + 1});
+    .post('/', getUser, zValidator('json', createWorkoutLogSchema), async (c) => {
+        const createWorkoutLog = c.req.valid('json');
+
+        let workoutLog;
+        await db.transaction(async (tx) => {
+            workoutLog = await tx
+                .insert(workoutLogsTable)
+                .values({...createWorkoutLog, userId: c.var.user.id, loggedAt: new Date().toISOString()})
+                .returning();
+
+            const insertedWorkout = workoutLog[0];
+            for (const exerciseSet of createWorkoutLog.exerciseLogs) {
+                const exercisesSets = await tx
+                    .insert(exerciseLogsTable)
+                    .values({workoutLogId: insertedWorkout.id, exerciseId: exerciseSet.exerciseId})
+                    .returning();
+
+                const insertedExerciseSet = exercisesSets[0];
+                for (const set of exerciseSet.setLogs) {
+                    await tx
+                        .insert(setLogsTable)
+                        .values({...set, exerciseLogsId: insertedExerciseSet.id})
+                        .returning();
+                }
+            }
+        });
+
         return c.json(workoutLog);
     });

@@ -14,6 +14,7 @@ export type ExerciseLog = z.infer<typeof exerciseLogSchema>;
 
 const workoutLogSchema = z.object({
     id: z.number().int().positive().min(1),
+    name: z.string().optional(),
     workoutId: z.number().int().positive().min(1),
     loggedAt: z.date(),
     exerciseLogs: z.array(exerciseLogSchema),

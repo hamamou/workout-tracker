@@ -2,7 +2,10 @@
     "name": "workout-tracker",
     "scripts": {
         "start": "tsx server/index.ts",
-        "dev": "tsx watch --env-file=.env server/index.ts "
+        "dev": "tsx watch --env-file=.env server/index.ts",
+        "migration:generate": "drizzle-kit generate",
+        "migration:run": "tsx --env-file=.env migrate.ts",
+        "studio": "drizzle-kit studio"
     },
     "dependencies": {
         "@hono/node-server": "^1.12.0",

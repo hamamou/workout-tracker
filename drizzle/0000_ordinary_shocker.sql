@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS "exercises" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "exercises_sets" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"exercise_id" text NOT NULL,
+	"exercise_id" integer NOT NULL,
 	"workout_id" integer NOT NULL
 );
 --> statement-breakpoint

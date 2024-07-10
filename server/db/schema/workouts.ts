@@ -1,4 +1,5 @@
-import {date, integer, pgTable, serial, text, uniqueIndex} from 'drizzle-orm/pg-core';
+import {date, index, integer, pgTable, serial, text} from 'drizzle-orm/pg-core';
+import {exercises} from './exercises';
 
 export const workouts = pgTable(
     'workouts',
@@ -11,27 +12,14 @@ export const workouts = pgTable(
     },
     (workouts) => {
         return {
-            userIndex: uniqueIndex('user_index').on(workouts.userId),
-        };
-    },
-);
-
-export const exercises = pgTable(
-    'exercises',
-    {
-        id: serial('id').primaryKey(),
-        name: text('name'),
-    },
-    (exercises) => {
-        return {
-            nameIndex: uniqueIndex('name_index').on(exercises.name),
+            userIndex: index('user_workout_index').on(workouts.userId),
         };
     },
 );
 
 export const exercisesSets = pgTable('exercises_sets', {
     id: serial('id').primaryKey(),
-    exerciseId: text('exercise_id')
+    exerciseId: integer('exercise_id')
         .references(() => exercises.id, {onDelete: 'cascade'})
         .notNull(),
     workoutId: integer('workout_id')
@@ -42,7 +30,7 @@ export const exercisesSets = pgTable('exercises_sets', {
 export const sets = pgTable('sets', {
     id: serial('id').primaryKey(),
     weight: integer('weight').notNull(),
-    reps: integer('reps').notNull(),
+    repetition: integer('repetitions').notNull(),
     exerciseSetId: integer('exercise_set_id')
         .references(() => exercisesSets.id, {onDelete: 'cascade'})
         .notNull(),
