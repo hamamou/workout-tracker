@@ -1,7 +1,7 @@
 import {Button, Checkbox, Group, NumberInput, Stack, Table, Text} from '@mantine/core';
 import {useForm} from '@mantine/form';
-import {type ExerciseLog} from '@server/routes/workoutLogs';
-import {type Workout} from '@server/routes/workouts';
+import {type ExerciseLog} from '@server/routes/workoutLogs/types';
+import {type Workout} from '@server/routes/workouts/types';
 import {FaRegSave} from 'react-icons/fa';
 import {z} from 'zod';
 import {useCreateWorkoutLog} from './hooks/useCreateWorkoutLog';
@@ -31,14 +31,15 @@ export const WorkoutLogs = ({workout}: {workout: Workout}) => {
         initialValues: {
             workoutId: workout.id,
             loggedAt: new Date(),
-            exerciseLogs: workout.exerciseSets.map((exerciseSet) => ({
-                exerciseId: exerciseSet.exercise?.id || 0,
-                setLogs: exerciseSet.sets.map((set) => ({
-                    repetition: set.repetition,
-                    weight: set.weight,
-                    completed: false,
-                })),
-            })),
+            exerciseLogs:
+                workout.exerciseSets?.map((exerciseSet) => ({
+                    exerciseId: exerciseSet.exercise?.id || 0,
+                    setLogs: exerciseSet.sets.map((set) => ({
+                        repetition: set.repetition,
+                        weight: set.weight,
+                        completed: false,
+                    })),
+                })) || [],
         },
     });
 

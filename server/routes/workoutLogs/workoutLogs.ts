@@ -22,12 +22,14 @@ export const workoutLogsRoutes = new Hono()
         const workoutLog = await db
             .select()
             .from(workoutLogsTable)
-            .where(and(eq(workoutLogsTable.id, id), eq(workoutLogsTable.userId, user.id)));
+            .where(and(eq(workoutLogsTable.id, id), eq(workoutLogsTable.userId, user.id)))
+            .limit(1)
+            .then((res) => res[0]);
 
         if (!workoutLog) {
             return c.notFound();
         }
-        return c.json(workoutLog[0]);
+        return c.json(workoutLog);
     })
     .post('/', getUser, zValidator('json', createWorkoutLogSchema), async (c) => {
         const createWorkoutLog = c.req.valid('json');
@@ -36,7 +38,7 @@ export const workoutLogsRoutes = new Hono()
         await db.transaction(async (tx) => {
             workoutLog = await tx
                 .insert(workoutLogsTable)
-                .values({...createWorkoutLog, userId: c.var.user.id, loggedAt: new Date().toISOString()})
+                .values({...createWorkoutLog, userId: c.var.user.id, loggedAt: new Date().toString()})
                 .returning();
 
             const insertedWorkout = workoutLog[0];

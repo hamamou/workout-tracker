@@ -1,7 +1,7 @@
 import {Button, Center, Divider, Group, Loader, NumberInput, Select, Stack, Table, Text} from '@mantine/core';
 import {UseFormReturnType} from '@mantine/form';
 import {type Exercise} from '@server/routes/exercise';
-import {type CreateWorkout, type ExerciseSet} from '@server/routes/workouts';
+import {type CreateWorkout, type ExerciseSet} from '@server/routes/workouts/types';
 import {BiPlus} from 'react-icons/bi';
 import {useGetExercises} from '../exercise/hook/useGetExercises';
 

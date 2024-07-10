@@ -15,21 +15,25 @@ import {createWorkoutSchema} from './types';
 export const workoutsRoutes = new Hono()
     .get('/', getUser, async (c) => {
         const user = c.var.user;
-        const workouts = await db.select().from(workoutsTable).where(eq(workoutsTable.userId, user.id));
+        const workouts = await db
+            .select()
+            .from(workoutsTable)
+            .where(eq(workoutsTable.userId, user.id))
+            .orderBy(workoutsTable.lastLoggedAt);
         return c.json({workouts});
     })
     .get('/:id{[0-9]+}', getUser, async (c) => {
         const id = Number.parseInt(c.req.param('id'));
-        const data = await db
+        const workout = await db
             .select()
             .from(exercisesSetsTable)
             .innerJoin(workoutsTable, eq(exercisesSetsTable.workoutId, workoutsTable.id))
             .innerJoin(setsTable, eq(exercisesSetsTable.id, setsTable.exerciseSetId))
             .innerJoin(exercises, eq(exercisesSetsTable.exerciseId, exercises.id))
-            .where(and(eq(workoutsTable.id, id), eq(workoutsTable.userId, c.var.user.id)));
-        const result = groupedByWorkoutId(data);
+            .where(and(eq(workoutsTable.id, id), eq(workoutsTable.userId, c.var.user.id)))
+            .then(groupedByWorkoutId);
 
-        return c.json({workout: result[0]});
+        return c.json({workout});
     })
     .post('/', getUser, zValidator('json', createWorkoutSchema), async (c) => {
         const createWorkoutData = c.req.valid('json');

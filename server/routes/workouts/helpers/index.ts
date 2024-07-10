@@ -23,40 +23,32 @@ export type dataType = {
         name: string;
     };
 };
-export const groupedByWorkoutId = (data: dataType[]): Workout[] => {
-    return data.reduce((acc: Workout[], current: dataType) => {
-        const {exercises_sets, workouts, sets, exercises} = current;
-        const {workoutId, exerciseId} = exercises_sets;
-        const {weight, repetition} = sets;
-        const {id, name, description, lastLoggedAt, userId} = workouts;
+export const groupedByWorkoutId = (data: dataType[]): Workout => {
+    const {exercises_sets, workouts} = data[0];
+    const {workoutId} = exercises_sets;
+    const {name, description, lastLoggedAt, userId} = workouts;
 
-        let workout = acc.find((w) => w.id === workoutId);
+    return data.reduce(
+        (acc: Workout, current: dataType) => {
+            const {exercises_sets, sets, exercises} = current;
+            const {exerciseId} = exercises_sets;
+            const {weight, repetition} = sets;
 
-        if (!workout) {
-            workout = {
-                id: workoutId,
-                name: name,
-                description: description,
-                lastLoggedAt: lastLoggedAt,
-                userId: userId,
-                exerciseSets: [],
-            };
-            acc.push(workout);
-        }
+            let exerciseSet = acc.exerciseSets?.find((es) => es.exerciseId === exerciseId);
 
-        let exerciseSet = workout.exerciseSets?.find((es) => es.exerciseId === exerciseId);
+            if (!exerciseSet) {
+                exerciseSet = {
+                    exerciseId: exerciseId,
+                    sets: [{weight, repetition}],
+                    name: exercises.name,
+                };
+                acc.exerciseSets?.push(exerciseSet);
+            } else {
+                exerciseSet.sets.push({weight, repetition});
+            }
 
-        if (!exerciseSet) {
-            exerciseSet = {
-                exerciseId: exerciseId,
-                sets: [{weight, repetition}],
-                name: exercises.name,
-            };
-            workout.exerciseSets?.push(exerciseSet);
-        } else {
-            exerciseSet.sets.push({weight, repetition});
-        }
-
-        return acc;
-    }, []);
+            return acc;
+        },
+        {id: workoutId, name, description, lastLoggedAt, userId, exerciseSets: []},
+    );
 };

@@ -1,5 +1,5 @@
 import {api} from '@lib/api';
-import {type CreateWorkout} from '@server/routes/workouts';
+import {type CreateWorkout} from '@server/routes/workouts/types';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 
 export const useCreateWorkout = () => {
