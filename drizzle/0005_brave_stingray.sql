@@ -1,1 +1,0 @@
-ALTER TABLE "workout_logs" ALTER COLUMN "logged_at" SET DATA TYPE timestamp (6) with time zone;

@@ -5,50 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1720572341818,
-      "tag": "0000_ordinary_shocker",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1720574791067,
-      "tag": "0001_messy_the_phantom",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1720576912630,
-      "tag": "0002_abnormal_longshot",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1720577820859,
-      "tag": "0003_sturdy_black_bird",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1720629715489,
-      "tag": "0004_flaky_the_hand",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1720631591307,
-      "tag": "0005_brave_stingray",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1720641813743,
-      "tag": "0006_loose_jigsaw",
+      "when": 1720641915579,
+      "tag": "0000_spooky_grey_gargoyle",
       "breakpoints": true
     }
   ]
