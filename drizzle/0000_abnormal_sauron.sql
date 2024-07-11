@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS "set_logs" (
 CREATE TABLE IF NOT EXISTS "workout_logs" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"name" text,
-	"logged_at" text,
+	"logged_at" date DEFAULT now(),
 	"user_id" text NOT NULL,
 	"workout_id" integer NOT NULL
 );
@@ -42,7 +42,8 @@ CREATE TABLE IF NOT EXISTS "workouts" (
 	"name" text NOT NULL,
 	"description" text,
 	"last_logged_at" date,
-	"user_id" text NOT NULL
+	"user_id" text NOT NULL,
+	"created_at" date DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 DO $$ BEGIN

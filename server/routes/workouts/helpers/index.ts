@@ -17,9 +17,9 @@ export type dataType = {
 export const groupedByWorkoutId = (data: dataType[]): WorkoutWithExerciseNames => {
     const {exercises_sets, workouts} = data[0];
     const {workoutId} = exercises_sets;
-    const {name, description, lastLoggedAt} = workouts;
+    const {name, description, lastLoggedAt, createdAt} = workouts;
 
-    return data.reduce(
+    return data.reduce<WorkoutWithExerciseNames>(
         (acc: WorkoutWithExerciseNames, current: dataType) => {
             const {exercises_sets, sets, exercises} = current;
             const {exerciseId} = exercises_sets;
@@ -40,6 +40,6 @@ export const groupedByWorkoutId = (data: dataType[]): WorkoutWithExerciseNames =
 
             return acc;
         },
-        {id: workoutId, name, description, lastLoggedAt, exerciseSets: []},
+        {id: workoutId, name, description, lastLoggedAt, createdAt, exerciseSets: []},
     );
 };

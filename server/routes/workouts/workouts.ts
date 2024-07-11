@@ -9,7 +9,7 @@ import {
     workouts as workoutsTable,
 } from '../../db/schema/workouts';
 import {getUser} from '../../kinde';
-import {insertWorkoutSchema} from '../../types/workout';
+import {insertWorkoutSchema, WorkoutWithExerciseNames} from '../../types/workout';
 import {groupedByWorkoutId} from './helpers';
 
 export const workoutsRoutes = new Hono()
@@ -24,14 +24,14 @@ export const workoutsRoutes = new Hono()
     })
     .get('/:id{[0-9]+}', getUser, async (c) => {
         const id = Number.parseInt(c.req.param('id'));
-        const workout = await db
+        const workout: WorkoutWithExerciseNames = await db
             .select()
             .from(exercisesSetsTable)
             .innerJoin(workoutsTable, eq(exercisesSetsTable.workoutId, workoutsTable.id))
             .innerJoin(setsTable, eq(exercisesSetsTable.id, setsTable.exerciseSetId))
             .innerJoin(exercises, eq(exercisesSetsTable.exerciseId, exercises.id))
             .where(and(eq(workoutsTable.id, id), eq(workoutsTable.userId, c.var.user.id)))
-            .then(groupedByWorkoutId);
+            .then((value) => groupedByWorkoutId(value));
 
         return c.json({workout});
     })
@@ -41,7 +41,7 @@ export const workoutsRoutes = new Hono()
         await db.transaction(async (tx) => {
             workout = await tx
                 .insert(workoutsTable)
-                .values({...validWorkout, lastLoggedAt: '', userId: c.var.user.id})
+                .values({...validWorkout, userId: c.var.user.id})
                 .returning();
 
             const insertedWorkout = workout[0];
@@ -59,11 +59,6 @@ export const workoutsRoutes = new Hono()
                         .returning();
                 }
             }
-
-            await tx
-                .update(workoutsTable)
-                .set({lastLoggedAt: new Date().toString()})
-                .where(eq(workoutsTable.id, insertedWorkout.id));
         });
 
         return c.json({workout}, 201);

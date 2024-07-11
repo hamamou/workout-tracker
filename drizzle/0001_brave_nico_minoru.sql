@@ -1,1 +1,0 @@
-ALTER TABLE "workouts" ALTER COLUMN "last_logged_at" SET DATA TYPE text;

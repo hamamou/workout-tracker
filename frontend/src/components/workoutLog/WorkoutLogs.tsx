@@ -28,7 +28,7 @@ export const WorkoutLogs = ({workout}: {workout: WorkoutWithExerciseNames}) => {
     const form = useForm<WorkoutLogsWithCompleted>({
         initialValues: {
             workoutId: workout.id,
-            loggedAt: new Date().toISOString(),
+            loggedAt: new Date(),
             name: '',
             exerciseLogs:
                 workout.exerciseSets?.map((exerciseSet) => ({

@@ -7,6 +7,7 @@ import {
     setLogs as setLogsTable,
     workoutLogs as workoutLogsTable,
 } from '../db/schema/workoutLogs';
+import {workouts} from '../db/schema/workouts';
 import {getUser} from '../kinde';
 import {insertWorkoutLogsSchema} from '../types/workoutLog';
 
@@ -32,7 +33,6 @@ export const workoutLogsRoutes = new Hono()
             .select()
             .from(workoutLogsTable)
             .where(and(eq(workoutLogsTable.id, id), eq(workoutLogsTable.userId, user.id)))
-            .limit(1)
             .then((res) => res[0]);
 
         if (!workoutLog) {
@@ -47,7 +47,7 @@ export const workoutLogsRoutes = new Hono()
         await db.transaction(async (tx) => {
             workoutLog = await tx
                 .insert(workoutLogsTable)
-                .values({...validWorkout, userId: c.var.user.id, loggedAt: new Date().toString()})
+                .values({...validWorkout, userId: c.var.user.id})
                 .returning();
 
             const insertedWorkout = workoutLog[0];
@@ -65,6 +65,13 @@ export const workoutLogsRoutes = new Hono()
                         .returning();
                 }
             }
+            const workout = await tx
+                .select()
+                .from(workouts)
+                .where(eq(workouts.id, validWorkout.workoutId))
+                .then((res) => res[0]);
+
+            await tx.update(workouts).set({lastLoggedAt: new Date()}).where(eq(workouts.id, workout.id));
         });
 
         return c.json(workoutLog);

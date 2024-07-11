@@ -3,7 +3,7 @@ import {createFileRoute} from '@tanstack/react-router';
 import {useGetWorkoutById} from '../../components/workout/hooks/useGetWorkoutById';
 import {WorkoutLogs} from '../../components/workoutLog/WorkoutLogs';
 
-const component = () => {
+const Component = () => {
     const {workoutId} = Route.useParams();
     const {data, isLoading, error} = useGetWorkoutById(workoutId);
 
@@ -18,5 +18,5 @@ const component = () => {
 };
 
 export const Route = createFileRoute('/_authenticated/workout-logs/$workoutId')({
-    component: component,
+    component: Component,
 });
