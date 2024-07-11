@@ -91,10 +91,7 @@ export const WorkoutLogs = ({workout}: {workout: WorkoutWithExerciseNames}) => {
             onSubmit={form.onSubmit((values) => {
                 const exerciseLogs = removeEmptyExerciseLogs(values);
 
-                const updatedValues = {...values, exerciseLogs: exerciseLogs, name: values.name || workout.name};
-                console.log(updatedValues);
-
-                mutation.mutate(updatedValues);
+                mutation.mutate({...values, exerciseLogs: exerciseLogs, name: values.name || workout.name});
             })}>
             <Stack>
                 <Group justify="space-between">

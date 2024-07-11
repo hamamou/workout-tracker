@@ -1,4 +1,4 @@
-import {index, integer, pgTable, serial, text, timestamp} from 'drizzle-orm/pg-core';
+import {date, index, integer, pgTable, serial, text} from 'drizzle-orm/pg-core';
 import {exercises} from './exercises';
 import {workouts} from './workouts';
 
@@ -7,7 +7,7 @@ export const workoutLogs = pgTable(
     {
         id: serial('id').primaryKey(),
         name: text('name'),
-        loggedAt: timestamp('logged_at').defaultNow(),
+        loggedAt: date('logged_at').defaultNow(),
         userId: text('user_id').notNull(),
         workoutId: integer('workout_id')
             .references(() => workouts.id, {onDelete: 'cascade'})

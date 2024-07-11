@@ -1,12 +1,15 @@
 import {Button, Divider, Group, Modal, Stack, TextInput} from '@mantine/core';
 import {useForm, zodResolver} from '@mantine/form';
 import {insertWorkout, insertWorkoutSchema} from '@server/types/workout';
+import {useQueryClient} from '@tanstack/react-query';
 import {MdOutlineCreate} from 'react-icons/md';
+import {getWorkoutsQueryConfig, loadingCreateWorkoutQueryConfig} from '../../lib/workout/getWorkoutsQueryConfig';
 import {CreateWorkoutExercise} from './CreateWorkoutExercise';
-import {useCreateWorkout} from './hooks/useCreateWorkout';
+import {createWorkout, useCreateWorkout} from './hooks/useCreateWorkout';
 
 export const CreateWorkoutModal = ({opened, close}: {opened: boolean; close: () => void}) => {
     const createWorkoutMutation = useCreateWorkout();
+    const queryClient = useQueryClient();
     const form = useForm<insertWorkout>({
         initialValues: {
             name: '',
@@ -26,8 +29,23 @@ export const CreateWorkoutModal = ({opened, close}: {opened: boolean; close: () 
         <Modal size="md" opened={opened} onClose={close} title="Create workout" mih={96}>
             <form
                 onSubmit={form.onSubmit(async (values) => {
-                    await createWorkoutMutation.mutateAsync(values);
+                    const existingWorkouts = await queryClient.ensureQueryData(getWorkoutsQueryConfig);
+
                     close();
+
+                    queryClient.setQueryData(loadingCreateWorkoutQueryConfig.queryKey, {
+                        workout: {name: values.name, description: values.description},
+                    });
+
+                    try {
+                        const newWorkout = await createWorkout(values);
+                        queryClient.setQueryData(getWorkoutsQueryConfig.queryKey, () => ({
+                            workouts: [newWorkout, ...existingWorkouts.workouts],
+                        }));
+                    } catch (error) {
+                    } finally {
+                        queryClient.setQueryData(loadingCreateWorkoutQueryConfig.queryKey, {});
+                    }
                 })}>
                 <Stack mih={540}>
                     <TextInput

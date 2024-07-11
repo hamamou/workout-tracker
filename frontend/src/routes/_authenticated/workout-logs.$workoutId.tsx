@@ -18,8 +18,8 @@ const Component = () => {
                     description: data.workout.description,
                     name: data.workout.name,
                     exerciseSets: data.workout.exerciseSets,
-                    lastLoggedAt: data.workout.lastLoggedAt ? new Date(data.workout.lastLoggedAt) : new Date(),
-                    createdAt: new Date(data.workout.createdAt),
+                    lastLoggedAt: new Date(data.workout.lastLoggedAt ?? Date.now()).toISOString(),
+                    createdAt: new Date(data.workout.createdAt!).toISOString(),
                 }}
             />
         </Center>

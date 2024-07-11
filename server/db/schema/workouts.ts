@@ -1,4 +1,4 @@
-import {index, integer, pgTable, serial, text, timestamp} from 'drizzle-orm/pg-core';
+import {date, index, integer, pgTable, serial, text} from 'drizzle-orm/pg-core';
 import {exercises} from './exercises';
 
 export const workouts = pgTable(
@@ -7,9 +7,9 @@ export const workouts = pgTable(
         id: serial('id').primaryKey(),
         name: text('name').notNull(),
         description: text('description'),
-        lastLoggedAt: timestamp('last_logged_at'),
+        lastLoggedAt: date('last_logged_at'),
         userId: text('user_id').notNull(),
-        createdAt: timestamp('created_at').defaultNow().notNull(),
+        createdAt: date('created_at').defaultNow(),
     },
     (workouts) => {
         return {

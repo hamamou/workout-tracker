@@ -9,7 +9,7 @@ import {
     workouts as workoutsTable,
 } from '../../db/schema/workouts';
 import {getUser} from '../../kinde';
-import {insertWorkoutSchema, WorkoutWithExerciseNames} from '../../types/workout';
+import {insertWorkoutSchema, selectBasicWorkout, WorkoutWithExerciseNames} from '../../types/workout';
 import {groupedByWorkoutId} from './helpers';
 
 export const workoutsRoutes = new Hono()
@@ -36,19 +36,21 @@ export const workoutsRoutes = new Hono()
         return c.json({workout});
     })
     .post('/', getUser, zValidator('json', insertWorkoutSchema), async (c) => {
+        await new Promise((resolve) => setTimeout(resolve, 5000));
         const validWorkout = insertWorkoutSchema.parse(c.req.valid('json'));
-        let workout;
+        let workout: selectBasicWorkout = {} as selectBasicWorkout;
+
         await db.transaction(async (tx) => {
             workout = await tx
                 .insert(workoutsTable)
-                .values({...validWorkout, createdAt: new Date(), userId: c.var.user.id})
-                .returning();
+                .values({...validWorkout, userId: c.var.user.id})
+                .returning()
+                .then((value) => value[0]);
 
-            const insertedWorkout = workout[0];
             for (const exerciseSet of validWorkout.exerciseSets) {
                 const exercisesSets = await tx
                     .insert(exercisesSetsTable)
-                    .values({workoutId: insertedWorkout.id, exerciseId: exerciseSet.exerciseId})
+                    .values({workoutId: workout.id, exerciseId: exerciseSet.exerciseId})
                     .returning();
 
                 const insertedExerciseSet = exercisesSets[0];
@@ -61,11 +63,11 @@ export const workoutsRoutes = new Hono()
             }
         });
 
-        return c.json({workout}, 201);
+        return c.json({...workout}, 201);
     })
 
     .delete('/:id{[0-9]+}', getUser, async (c) => {
         const id = Number.parseInt(c.req.param('id'));
         await db.delete(workoutsTable).where(eq(workoutsTable.id, id));
-        return c.json({message: 'Workout deleted'}, 204);
+        return c.json({message: 'Workout deleted'}, 200);
     });

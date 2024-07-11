@@ -5,7 +5,7 @@ import {Link} from '@tanstack/react-router';
 import {FaMagnifyingGlass} from 'react-icons/fa6';
 import {HiOutlineDotsVertical} from 'react-icons/hi';
 import {RxCross2} from 'react-icons/rx';
-import {WorkoutLogByWorkoutIdModal} from '../workoutLog/WorkoutLogByWorkoutIdModal';
+import {ViewWorkoutLogByWorkoutIdModal} from '../workoutLog/ViewWorkoutLogByWorkoutIdModal';
 import {useDeleteWorkout} from './hooks/useDeleteWorkout';
 import {ViewWorkoutModal} from './ViewWorkoutModal';
 
@@ -77,7 +77,7 @@ export const WorkoutCard = ({workout}: {workout: WorkoutCardProps}) => {
             )}
 
             {workout.id && openedViewLogs && (
-                <WorkoutLogByWorkoutIdModal opened={openedViewLogs} workoutId={workout.id} close={closeViewLogs} />
+                <ViewWorkoutLogByWorkoutIdModal opened={openedViewLogs} workoutId={workout.id} close={closeViewLogs} />
             )}
         </Card>
     );

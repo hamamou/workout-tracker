@@ -30,8 +30,8 @@ export const insertWorkoutLogsSchema = createInsertSchema(workoutLogs, {name: z.
         exerciseLogs: z.array(insertExerciseLogsSchemaCustom),
     })
     .omit({userId: true, loggedAt: true});
-
-export const selectWorkoutLogsSchema = createSelectSchema(workoutLogs)
+const basicWorkoutLogsSchema = createSelectSchema(workoutLogs);
+export const selectWorkoutLogsSchema = basicWorkoutLogsSchema
     .extend({
         exerciseLogs: z.array(selectExerciseLogsSchemaCustom),
     })
@@ -39,3 +39,4 @@ export const selectWorkoutLogsSchema = createSelectSchema(workoutLogs)
 
 export type insertWorkoutLogs = Zod.infer<typeof insertWorkoutLogsSchema>;
 export type selectWorkoutLogs = Zod.infer<typeof selectWorkoutLogsSchema>;
+export type selectBasicWorkoutLogs = Zod.infer<typeof basicWorkoutLogsSchema>;

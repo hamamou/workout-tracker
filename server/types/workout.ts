@@ -37,8 +37,8 @@ export const insertWorkoutSchema = createInsertSchema(workouts, {name: z.string(
         exerciseSets: z.array(insertExerciseSetSchemaCustom).nonempty({message: 'Add at least one exercise'}),
     })
     .omit({userId: true, createdAt: true, lastLoggedAt: true});
-
-export const selectWorkoutSchema = createSelectSchema(workouts)
+const selectBasicWorkoutSchema = createSelectSchema(workouts);
+const selectWorkoutSchema = selectBasicWorkoutSchema
     .extend({
         exerciseSets: z.array(selectExerciseSetSchemaCustom),
     })
@@ -46,6 +46,7 @@ export const selectWorkoutSchema = createSelectSchema(workouts)
 
 export type insertWorkout = Zod.infer<typeof insertWorkoutSchema>;
 export type selectWorkout = Zod.infer<typeof selectWorkoutSchema>;
+export type selectBasicWorkout = Zod.infer<typeof selectBasicWorkoutSchema>;
 
 export type ExerciseWithNames = {
     exerciseId: number;

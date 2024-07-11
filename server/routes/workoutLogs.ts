@@ -9,7 +9,7 @@ import {
 } from '../db/schema/workoutLogs';
 import {workouts} from '../db/schema/workouts';
 import {getUser} from '../kinde';
-import {insertWorkoutLogsSchema} from '../types/workoutLog';
+import {insertWorkoutLogsSchema, selectBasicWorkoutLogs} from '../types/workoutLog';
 
 export const workoutLogsRoutes = new Hono()
     .get('/', getUser, async (c) => {
@@ -24,6 +24,7 @@ export const workoutLogsRoutes = new Hono()
             .select()
             .from(workoutLogsTable)
             .where(and(eq(workoutLogsTable.workoutId, workoutId), eq(workoutLogsTable.userId, user.id)));
+
         return c.json(workoutLogs);
     })
     .get('/:id', getUser, async (c) => {
@@ -43,18 +44,22 @@ export const workoutLogsRoutes = new Hono()
     .post('/', getUser, zValidator('json', insertWorkoutLogsSchema), async (c) => {
         const validWorkout = c.req.valid('json');
 
-        let workoutLog;
+        let workoutLog: selectBasicWorkoutLogs = {} as selectBasicWorkoutLogs;
         await db.transaction(async (tx) => {
             workoutLog = await tx
                 .insert(workoutLogsTable)
-                .values({...validWorkout, loggedAt: new Date(), userId: c.var.user.id})
-                .returning();
+                .values({
+                    ...validWorkout,
+                    loggedAt: new Date().toISOString(),
+                    userId: c.var.user.id,
+                })
+                .returning()
+                .then((res) => res[0]);
 
-            const insertedWorkout = workoutLog[0];
             for (const exerciseSet of validWorkout.exerciseLogs) {
                 const exercisesSets = await tx
                     .insert(exerciseLogsTable)
-                    .values({workoutLogId: insertedWorkout.id, exerciseId: exerciseSet.exerciseId})
+                    .values({workoutLogId: workoutLog.id, exerciseId: exerciseSet.exerciseId})
                     .returning();
 
                 const insertedExerciseSet = exercisesSets[0];
@@ -71,7 +76,7 @@ export const workoutLogsRoutes = new Hono()
                 .where(eq(workouts.id, validWorkout.workoutId))
                 .then((res) => res[0]);
 
-            await tx.update(workouts).set({lastLoggedAt: new Date()}).where(eq(workouts.id, workout.id));
+            await tx.update(workouts).set({lastLoggedAt: new Date().toISOString()}).where(eq(workouts.id, workout.id));
         });
 
         return c.json(workoutLog);

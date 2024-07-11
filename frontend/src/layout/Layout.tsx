@@ -1,7 +1,7 @@
 import {AppShell, Burger, Group, Loader, Stack, UnstyledButton} from '@mantine/core';
 import {useDisclosure} from '@mantine/hooks';
 import {useQuery} from '@tanstack/react-query';
-import {Outlet, useNavigate} from '@tanstack/react-router';
+import {Link, Outlet, useNavigate} from '@tanstack/react-router';
 import {Suspense} from 'react';
 import {userQueryOptions} from '../lib/api';
 
@@ -26,11 +26,13 @@ export const Layout = () => {
                 <Group h="100%" px="md">
                     <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
                     <Group justify="space-between" style={{flex: 1}}>
-                        <img src="logo.jpg" alt="logo" width={40} height={40} />
+                        <Link to="/">
+                            <img src="logo.jpg" alt="logo" width={40} height={40} />
+                        </Link>
+
                         <Group ml="xl" gap={0} visibleFrom="sm" p={4}>
                             {data?.user ? (
                                 <Group gap={20}>
-                                    <UnstyledButton onClick={() => navigate({to: '/'})}>Home</UnstyledButton>
                                     <UnstyledButton onClick={() => navigate({to: '/about'})}>About</UnstyledButton>
                                     <a href="/api/logout" className="text-inherit no-underline">
                                         Logout
