@@ -1,6 +1,6 @@
+import {ApiRoutes} from '@server/app';
 import {queryOptions} from '@tanstack/react-query';
 import {hc} from 'hono/client';
-import {ApiRoutes} from '../../../server/app';
 
 const client = hc<ApiRoutes>('/');
 

@@ -19,11 +19,10 @@ const selectExerciseLogsSchemaCustom = z.object({
 });
 
 const insertExerciseLogsSchemaCustom = z.object({
-    exerciseId: selectExerciseLogsSchema.shape.exerciseId,
+    exerciseId: insertExerciseLogsSchema.shape.exerciseId,
     setLogs: z.array(insertSetLogsSchema.omit({exerciseLogsId: true})),
 });
 
-// export type selectExerciseLogsCustom = z.infer<typeof selectExerciseLogsSchemaCustom>;
 export type insertExerciseLogsCustom = z.infer<typeof insertExerciseLogsSchemaCustom>;
 
 export const insertWorkoutLogsSchema = createInsertSchema(workoutLogs, {name: z.string().optional()})

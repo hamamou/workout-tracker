@@ -1,9 +1,9 @@
 import {api} from '@lib/api';
-import {type CreateWorkout} from '@server/routes/workouts/types';
+import {insertWorkout} from '@server/types/workout';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 
 export const useCreateWorkout = () => {
-    const createWorkout = async (workout: CreateWorkout) => {
+    const createWorkout = async (workout: insertWorkout) => {
         const response = await api.workouts.$post({json: workout});
 
         return await response.json();
@@ -13,7 +13,7 @@ export const useCreateWorkout = () => {
 
     return useMutation({
         mutationKey: ['createWorkout'],
-        mutationFn: (workout: CreateWorkout) => createWorkout(workout),
+        mutationFn: (workout: insertWorkout) => createWorkout(workout),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['workouts']});
         },

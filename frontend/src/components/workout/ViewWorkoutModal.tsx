@@ -1,5 +1,5 @@
 import {Loader, Modal, Stack, Table, Text} from '@mantine/core';
-import {type ExerciseSet} from '@server/routes/workouts/types';
+import {insertExerciseSetCustom} from '@server/types/workout';
 import {useGetWorkoutById} from './hooks/useGetWorkoutById';
 
 export const ViewWorkoutModal = ({
@@ -12,7 +12,7 @@ export const ViewWorkoutModal = ({
     close: () => void;
 }) => {
     const {data, isLoading} = useGetWorkoutById(workoutId.toString());
-    const rows = (field: ExerciseSet) => {
+    const rows = (field: insertExerciseSetCustom) => {
         return field.sets.map((set, setIndex) => (
             <Table.Tr key={setIndex}>
                 <Table.Td>
@@ -38,9 +38,9 @@ export const ViewWorkoutModal = ({
             <Modal.Body>
                 <Stack>
                     {isLoading && <Loader />}
-                    {data.workout.exerciseSets?.map((field, index) => (
+                    {data.workout.exerciseSets?.map((exerciseSet, index) => (
                         <Stack key={index}>
-                            <Text fw="bold">{field.exercise?.name}</Text>
+                            <Text fw="bold">{exerciseSet.name}</Text>
                             <Table horizontalSpacing="lg" mx="lg">
                                 <Table.Thead>
                                     <Table.Tr>
@@ -53,7 +53,7 @@ export const ViewWorkoutModal = ({
                                         </Table.Th>
                                     </Table.Tr>
                                 </Table.Thead>
-                                <Table.Tbody>{rows(field)}</Table.Tbody>
+                                <Table.Tbody>{rows(exerciseSet)}</Table.Tbody>
                             </Table>
                         </Stack>
                     ))}

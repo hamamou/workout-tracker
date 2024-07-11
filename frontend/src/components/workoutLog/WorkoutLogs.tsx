@@ -1,6 +1,6 @@
 import {Button, Checkbox, Group, NumberInput, Stack, Table, Text} from '@mantine/core';
 import {useForm} from '@mantine/form';
-import {type Workout} from '@server/routes/workouts/types';
+import {WorkoutWithExerciseNames} from '@server/types/workout';
 import {insertExerciseLogsCustom, insertWorkoutLogsSchema} from '@server/types/workoutLog';
 import {FaRegSave} from 'react-icons/fa';
 import {z} from 'zod';
@@ -23,7 +23,7 @@ const WorkoutLogsWithCompletedSchema = insertWorkoutLogsSchema.extend({
 
 type WorkoutLogsWithCompleted = z.infer<typeof WorkoutLogsWithCompletedSchema>;
 
-export const WorkoutLogs = ({workout}: {workout: Workout}) => {
+export const WorkoutLogs = ({workout}: {workout: WorkoutWithExerciseNames}) => {
     const mutation = useCreateWorkoutLog();
     const form = useForm<WorkoutLogsWithCompleted>({
         initialValues: {

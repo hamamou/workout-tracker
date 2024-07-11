@@ -1,11 +1,11 @@
 import {api} from '@lib/api';
-import {type createWorkoutLog} from '@server/routes/workoutLogs/types';
+import {type insertWorkoutLogs} from '@server/types/workoutLog';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {useNavigate} from '@tanstack/react-router';
 
 export const useCreateWorkoutLog = () => {
     const navigate = useNavigate();
-    const createWorkoutLog = async (workoutLog: createWorkoutLog) => {
+    const createWorkoutLog = async (workoutLog: insertWorkoutLogs) => {
         const response = await api.workoutLogs.$post({json: workoutLog});
 
         return await response.json();
@@ -14,7 +14,7 @@ export const useCreateWorkoutLog = () => {
 
     return useMutation({
         mutationKey: ['createWorkoutLog'],
-        mutationFn: (workoutLog: createWorkoutLog) => createWorkoutLog(workoutLog),
+        mutationFn: (workoutLog: insertWorkoutLogs) => createWorkoutLog(workoutLog),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['workouts']});
             navigate({to: '/'});

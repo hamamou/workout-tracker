@@ -1,13 +1,13 @@
 import {Button, Divider, Group, Modal, Stack, TextInput} from '@mantine/core';
 import {useForm, zodResolver} from '@mantine/form';
+import {insertWorkout, insertWorkoutSchema} from '@server/types/workout';
 import {MdOutlineCreate} from 'react-icons/md';
-import {type CreateWorkout, createWorkoutSchema} from '../../../../server/routes/workouts/types';
 import {CreateWorkoutExercise} from './CreateWorkoutExercise';
 import {useCreateWorkout} from './hooks/useCreateWorkout';
 
 export const CreateWorkoutModal = ({opened, close}: {opened: boolean; close: () => void}) => {
     const createWorkoutMutation = useCreateWorkout();
-    const form = useForm<CreateWorkout>({
+    const form = useForm<insertWorkout>({
         initialValues: {
             name: '',
             description: '',
@@ -19,7 +19,7 @@ export const CreateWorkoutModal = ({opened, close}: {opened: boolean; close: () 
             ],
         },
 
-        validate: zodResolver(createWorkoutSchema),
+        validate: zodResolver(insertWorkoutSchema),
     });
 
     return (

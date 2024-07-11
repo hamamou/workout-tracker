@@ -1,54 +1,45 @@
-import {Workout} from '../types';
+import {selectExercise} from '../../../types/exercise';
+import {
+    ExerciseWithNames,
+    selectExerciseSet,
+    selectSet,
+    selectWorkout,
+    WorkoutWithExerciseNames,
+} from '../../../types/workout';
 
 export type dataType = {
-    workouts: {
-        id: number;
-        name: string;
-        description: string | null;
-        lastLoggedAt: string | null;
-        userId: string;
-    };
-    exercises_sets: {
-        id: number;
-        exerciseId: number;
-        workoutId: number;
-    };
-    sets: {
-        id: number;
-        weight: number;
-        repetition: number;
-    };
-    exercises: {
-        id: number;
-        name: string;
-    };
+    workouts: Omit<selectWorkout, 'exerciseSets'>;
+    exercises_sets: selectExerciseSet;
+    sets: Omit<selectSet, 'exerciseSetId'>;
+    exercises: selectExercise;
 };
-export const groupedByWorkoutId = (data: dataType[]): Workout => {
+
+export const groupedByWorkoutId = (data: dataType[]): WorkoutWithExerciseNames => {
     const {exercises_sets, workouts} = data[0];
     const {workoutId} = exercises_sets;
-    const {name, description, lastLoggedAt, userId} = workouts;
+    const {name, description, lastLoggedAt} = workouts;
 
     return data.reduce(
-        (acc: Workout, current: dataType) => {
+        (acc: WorkoutWithExerciseNames, current: dataType) => {
             const {exercises_sets, sets, exercises} = current;
             const {exerciseId} = exercises_sets;
-            const {weight, repetition} = sets;
+            const {weight, repetition, id: setId} = sets;
 
-            let exerciseSet = acc.exerciseSets?.find((es) => es.exerciseId === exerciseId);
+            let exerciseSet = acc.exerciseSets?.find((es) => es.exerciseId === exerciseId) as ExerciseWithNames;
 
             if (!exerciseSet) {
                 exerciseSet = {
                     exerciseId: exerciseId,
-                    sets: [{weight, repetition}],
+                    sets: [{weight, repetition, id: setId}],
                     name: exercises.name,
                 };
                 acc.exerciseSets?.push(exerciseSet);
             } else {
-                exerciseSet.sets.push({weight, repetition});
+                exerciseSet.sets.push({weight, repetition, id: setId});
             }
 
             return acc;
         },
-        {id: workoutId, name, description, lastLoggedAt, userId, exerciseSets: []},
+        {id: workoutId, name, description, lastLoggedAt, exerciseSets: []},
     );
 };

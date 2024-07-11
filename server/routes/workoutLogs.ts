@@ -1,14 +1,14 @@
 import {zValidator} from '@hono/zod-validator';
 import {and, eq} from 'drizzle-orm';
 import {Hono} from 'hono';
-import {db} from '../../db';
+import {db} from '../db';
 import {
     exerciseLogs as exerciseLogsTable,
     setLogs as setLogsTable,
     workoutLogs as workoutLogsTable,
-} from '../../db/schema/workoutLogs';
-import {getUser} from '../../kinde';
-import {insertWorkoutLogsSchema} from '../../types/workoutLog';
+} from '../db/schema/workoutLogs';
+import {getUser} from '../kinde';
+import {insertWorkoutLogsSchema} from '../types/workoutLog';
 
 export const workoutLogsRoutes = new Hono()
     .get('/', getUser, async (c) => {

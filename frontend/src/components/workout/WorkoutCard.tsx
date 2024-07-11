@@ -1,6 +1,6 @@
 import {Button, Card, Group, Menu, Stack, Text, rem} from '@mantine/core';
 import {useDisclosure} from '@mantine/hooks';
-import {type Workout} from '@server/routes/workouts/types';
+import {selectWorkout} from '@server/types/workout';
 import {Link} from '@tanstack/react-router';
 import {FaMagnifyingGlass} from 'react-icons/fa6';
 import {HiOutlineDotsVertical} from 'react-icons/hi';
@@ -9,7 +9,7 @@ import {WorkoutLogByWorkoutIdModal} from '../workoutLog/WorkoutLogByWorkoutIdMod
 import {useDeleteWorkout} from './hooks/useDeleteWorkout';
 import {ViewWorkoutModal} from './ViewWorkoutModal';
 
-export const WorkoutCard = ({workout}: {workout: Workout}) => {
+export const WorkoutCard = ({workout}: {workout: Omit<selectWorkout, 'exerciseSets'>}) => {
     const [openedViewLogs, {close: closeViewLogs, open: openViewLogs}] = useDisclosure(false);
     const [openedWorkout, {close: closeWorkout, open: openWorkout}] = useDisclosure(false);
     const deleteWorkout = useDeleteWorkout(workout.id!);

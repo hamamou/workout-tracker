@@ -13,7 +13,7 @@ import {
 } from '@mantine/core';
 import {UseFormReturnType} from '@mantine/form';
 import {type Exercise} from '@server/routes/exercise';
-import {type CreateWorkout, type ExerciseSet} from '@server/routes/workouts/types';
+import {insertExerciseSetCustom, insertWorkout} from '@server/types/workout';
 import {BiPlus} from 'react-icons/bi';
 import {IoIosRemoveCircleOutline} from 'react-icons/io';
 import {useGetExercises} from '../exercise/hook/useGetExercises';
@@ -21,7 +21,7 @@ import {useGetExercises} from '../exercise/hook/useGetExercises';
 export const CreateWorkoutExercise = ({
     form,
 }: {
-    form: UseFormReturnType<CreateWorkout, (values: CreateWorkout) => CreateWorkout>;
+    form: UseFormReturnType<insertWorkout, (values: insertWorkout) => insertWorkout>;
 }) => {
     const {data: exercises, error, isLoading} = useGetExercises();
 
@@ -42,7 +42,7 @@ export const CreateWorkoutExercise = ({
         }
     };
 
-    const rows = (field: ExerciseSet, index: number) => {
+    const rows = (field: insertExerciseSetCustom, index: number) => {
         return field.sets.map((_set, setIndex) => (
             <Table.Tr key={setIndex}>
                 <Table.Td>
