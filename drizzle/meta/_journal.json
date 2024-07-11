@@ -8,6 +8,13 @@
       "when": 1720641915579,
       "tag": "0000_spooky_grey_gargoyle",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1720665607261,
+      "tag": "0001_brave_nico_minoru",
+      "breakpoints": true
     }
   ]
 }

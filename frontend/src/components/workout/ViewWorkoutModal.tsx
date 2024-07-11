@@ -1,4 +1,4 @@
-import {Modal, Stack, Table, Text} from '@mantine/core';
+import {Loader, Modal, Stack, Table, Text} from '@mantine/core';
 import {type ExerciseSet} from '@server/routes/workouts/types';
 import {useGetWorkoutById} from './hooks/useGetWorkoutById';
 
@@ -11,7 +11,7 @@ export const ViewWorkoutModal = ({
     opened: boolean;
     close: () => void;
 }) => {
-    const {data, isLoading, error, isError} = useGetWorkoutById(workoutId.toString());
+    const {data, isLoading} = useGetWorkoutById(workoutId.toString());
     const rows = (field: ExerciseSet) => {
         return field.sets.map((set, setIndex) => (
             <Table.Tr key={setIndex}>
@@ -31,24 +31,13 @@ export const ViewWorkoutModal = ({
             </Table.Tr>
         ));
     };
-    if (isLoading)
-        return (
-            <Modal opened={opened} onClose={close} title="Loading...">
-                Loading...
-            </Modal>
-        );
-    if (error)
-        return (
-            <Modal opened={opened} onClose={close} title="Error">
-                {error.message}
-            </Modal>
-        );
 
     if (!data) return null;
     return (
         <Modal opened={opened} onClose={close} title={data.workout.name}>
             <Modal.Body>
                 <Stack>
+                    {isLoading && <Loader />}
                     {data.workout.exerciseSets?.map((field, index) => (
                         <Stack key={index}>
                             <Text fw="bold">{field.exercise?.name}</Text>

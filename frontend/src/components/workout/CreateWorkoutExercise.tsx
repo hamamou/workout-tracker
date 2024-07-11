@@ -1,8 +1,21 @@
-import {Button, Center, Divider, Group, Loader, NumberInput, Select, Stack, Table, Text} from '@mantine/core';
+import {
+    Button,
+    Center,
+    Divider,
+    Group,
+    Loader,
+    NumberInput,
+    Select,
+    Stack,
+    Table,
+    Text,
+    UnstyledButton,
+} from '@mantine/core';
 import {UseFormReturnType} from '@mantine/form';
 import {type Exercise} from '@server/routes/exercise';
 import {type CreateWorkout, type ExerciseSet} from '@server/routes/workouts/types';
 import {BiPlus} from 'react-icons/bi';
+import {IoIosRemoveCircleOutline} from 'react-icons/io';
 import {useGetExercises} from '../exercise/hook/useGetExercises';
 
 export const CreateWorkoutExercise = ({
@@ -10,15 +23,15 @@ export const CreateWorkoutExercise = ({
 }: {
     form: UseFormReturnType<CreateWorkout, (values: CreateWorkout) => CreateWorkout>;
 }) => {
-    const {data, error, isLoading} = useGetExercises();
+    const {data: exercises, error, isLoading} = useGetExercises();
 
     if (error) {
         return <div>{error.message}</div>;
     }
 
-    const updateExerciseId = (value: string, index: number) => {
-        if (value && data) {
-            const exerciseId = data.find((exercise: Exercise) => exercise.name === value)?.id;
+    const updateExerciseId = (selectedExercise: string, index: number) => {
+        if (selectedExercise && exercises) {
+            const exerciseId = exercises.find((exercise: Exercise) => exercise.name === selectedExercise)?.id;
             if (!exerciseId) {
                 return;
             }
@@ -49,6 +62,18 @@ export const CreateWorkoutExercise = ({
                         {...form.getInputProps(`exerciseSets.${index}.sets.${setIndex}.weight`)}
                     />
                 </Table.Td>
+                <Table.Td>
+                    {field.sets.length !== 1 ? (
+                        <UnstyledButton
+                            onClick={() => {
+                                form.removeListItem(`exerciseSets.${index}.sets`, setIndex);
+                            }}>
+                            <IoIosRemoveCircleOutline color="red" />
+                        </UnstyledButton>
+                    ) : (
+                        <> </>
+                    )}
+                </Table.Td>
             </Table.Tr>
         ));
     };
@@ -78,25 +103,43 @@ export const CreateWorkoutExercise = ({
                     <Text size="sm">Weight</Text>
                 </Center>
             </Table.Th>
+            <Table.Th />
         </Table.Tr>
     );
     return (
         <>
-            <Text>Exercises</Text>
+            <Text>
+                Exercises
+                <Text c="red" size="xs">
+                    {form.errors['exerciseSets']}
+                </Text>
+            </Text>
             <Stack>
                 {form.values.exerciseSets.map((field, index) => (
                     <Stack key={index}>
                         <Center>
                             <Stack>
-                                <Select
-                                    placeholder="Choose exercise"
-                                    data={data?.map((exercise: Exercise) => exercise.name)}
-                                    onChange={(value) => {
-                                        if (value) {
-                                            updateExerciseId(value, index);
-                                        }
-                                    }}
-                                />
+                                <Group>
+                                    <Select
+                                        required
+                                        className="grow"
+                                        placeholder="Choose exercise"
+                                        data={exercises?.map((exercise: Exercise) => exercise.name)}
+                                        // {...form.getInputProps(`exerciseSets.${index}.exerciseId`)}
+                                        onChange={(value) => {
+                                            if (value) {
+                                                updateExerciseId(value, index);
+                                            }
+                                        }}
+                                        error={form.errors[`exerciseSets.${index}.exerciseId`]}
+                                    />
+                                    <UnstyledButton
+                                        onClick={() => {
+                                            form.removeListItem(`exerciseSets`, index);
+                                        }}>
+                                        <IoIosRemoveCircleOutline color="red" />
+                                    </UnstyledButton>
+                                </Group>
 
                                 <Table withRowBorders={false}>
                                     <Table.Thead>{header}</Table.Thead>

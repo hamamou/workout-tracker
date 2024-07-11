@@ -1,4 +1,4 @@
-import {Button, Card, Group, Menu, Text, rem} from '@mantine/core';
+import {Button, Card, Group, Menu, Stack, Text, rem} from '@mantine/core';
 import {useDisclosure} from '@mantine/hooks';
 import {type Workout} from '@server/routes/workouts/types';
 import {Link} from '@tanstack/react-router';
@@ -16,48 +16,49 @@ export const WorkoutCard = ({workout}: {workout: Workout}) => {
 
     return (
         <Card shadow="sm" radius="md" withBorder>
-            <Group justify="space-between" mb="xs">
-                <Text fw={500}>{workout.name}</Text>
-                <Menu shadow="md" width={200}>
-                    <Menu.Target>
-                        <div>
-                            <HiOutlineDotsVertical size={15} className="cursor-pointer" />
-                        </div>
-                    </Menu.Target>
-                    <Menu.Dropdown>
-                        <Menu.Label>Application</Menu.Label>
-                        <Menu.Item
-                            leftSection={<FaMagnifyingGlass style={{width: rem(14), height: rem(14)}} />}
-                            onClick={openWorkout}>
-                            View workout
-                        </Menu.Item>
-                        <Menu.Item
-                            leftSection={<FaMagnifyingGlass style={{width: rem(14), height: rem(14)}} />}
-                            onClick={openViewLogs}>
-                            View logs
-                        </Menu.Item>
-                        <Menu.Divider />
-                        <Menu.Item
-                            color="red"
-                            leftSection={<RxCross2 style={{width: rem(14), height: rem(14)}} />}
-                            onClick={async () => {
-                                await deleteWorkout.mutateAsync();
-                            }}>
-                            Remove workout
-                        </Menu.Item>
-                    </Menu.Dropdown>
-                </Menu>
-            </Group>
+            <Stack h="100%" justify="space-between" gap={0}>
+                <Group justify="space-between" mb="xs">
+                    <Text fw={500}>{workout.name}</Text>
+                    <Menu shadow="md" width={200}>
+                        <Menu.Target>
+                            <div>
+                                <HiOutlineDotsVertical size={15} className="cursor-pointer" />
+                            </div>
+                        </Menu.Target>
+                        <Menu.Dropdown>
+                            <Menu.Label>Application</Menu.Label>
+                            <Menu.Item
+                                leftSection={<FaMagnifyingGlass style={{width: rem(14), height: rem(14)}} />}
+                                onClick={openWorkout}>
+                                View workout
+                            </Menu.Item>
+                            <Menu.Item
+                                leftSection={<FaMagnifyingGlass style={{width: rem(14), height: rem(14)}} />}
+                                onClick={openViewLogs}>
+                                View logs
+                            </Menu.Item>
+                            <Menu.Divider />
+                            <Menu.Item
+                                color="red"
+                                leftSection={<RxCross2 style={{width: rem(14), height: rem(14)}} />}
+                                onClick={async () => {
+                                    await deleteWorkout.mutateAsync();
+                                }}>
+                                Remove workout
+                            </Menu.Item>
+                        </Menu.Dropdown>
+                    </Menu>
+                </Group>
+                <Text size="sm" c="dimmed" truncate="end" mb="sm">
+                    {workout.description}
+                </Text>
 
-            <Text size="sm" c="dimmed" truncate="end" mb="sm">
-                {workout.description}
-            </Text>
-
-            <Link to={`/workout-logs/${workout.id}`} className="text-inherit no-underline">
-                <Button color="blue" fullWidth mt="md" radius="md">
-                    Start workout
-                </Button>
-            </Link>
+                <Link to={`/workout-logs/${workout.id}`} className="items-end text-inherit no-underline">
+                    <Button color="blue" fullWidth mt="md" radius="md" className="mt-0">
+                        Start workout
+                    </Button>
+                </Link>
+            </Stack>
 
             {workout && openedWorkout && (
                 <ViewWorkoutModal opened={openedWorkout} workoutId={workout.id} close={closeWorkout} />

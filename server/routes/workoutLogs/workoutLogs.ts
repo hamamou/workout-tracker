@@ -16,6 +16,15 @@ export const workoutLogsRoutes = new Hono()
         const workoutLogs = await db.select().from(workoutLogsTable).where(eq(workoutLogsTable.userId, user.id));
         return c.json(workoutLogs);
     })
+    .get('/:workoutId{[0-9]+}', getUser, async (c) => {
+        const workoutId = parseInt(c.req.param('workoutId'));
+        const user = c.var.user;
+        const workoutLogs = await db
+            .select()
+            .from(workoutLogsTable)
+            .where(and(eq(workoutLogsTable.workoutId, workoutId), eq(workoutLogsTable.userId, user.id)));
+        return c.json(workoutLogs);
+    })
     .get('/:id', getUser, async (c) => {
         const id = parseInt(c.req.param('id'));
         const user = c.var.user;

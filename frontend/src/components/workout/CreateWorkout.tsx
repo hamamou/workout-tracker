@@ -1,7 +1,7 @@
 import {Button, Divider, Group, Modal, Stack, TextInput} from '@mantine/core';
-import {useForm} from '@mantine/form';
-import {type CreateWorkout} from '@server/routes/workouts/types';
+import {useForm, zodResolver} from '@mantine/form';
 import {MdOutlineCreate} from 'react-icons/md';
+import {type CreateWorkout, createWorkoutSchema} from '../../../../server/routes/workouts/types';
 import {CreateWorkoutExercise} from './CreateWorkoutExercise';
 import {useCreateWorkout} from './hooks/useCreateWorkout';
 
@@ -18,14 +18,14 @@ export const CreateWorkoutModal = ({opened, close}: {opened: boolean; close: () 
                 },
             ],
         },
+
+        validate: zodResolver(createWorkoutSchema),
     });
 
     return (
         <Modal size="md" opened={opened} onClose={close} title="Create workout" mih={96}>
             <form
                 onSubmit={form.onSubmit(async (values) => {
-                    console.log(values);
-
                     await createWorkoutMutation.mutateAsync(values);
                     close();
                 })}>

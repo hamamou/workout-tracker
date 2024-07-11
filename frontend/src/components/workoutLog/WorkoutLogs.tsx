@@ -1,26 +1,24 @@
 import {Button, Checkbox, Group, NumberInput, Stack, Table, Text} from '@mantine/core';
 import {useForm} from '@mantine/form';
-import {type ExerciseLog} from '@server/routes/workoutLogs/types';
+import {createWorkoutLogSchema, type ExerciseLog} from '@server/routes/workoutLogs/types';
 import {type Workout} from '@server/routes/workouts/types';
 import {FaRegSave} from 'react-icons/fa';
 import {z} from 'zod';
 import {useCreateWorkoutLog} from './hooks/useCreateWorkoutLog';
 
-const exerciseLogSchema = z.object({
-    exerciseId: z.number(),
-    setLogs: z.array(
+const WorkoutLogsWithCompletedSchema = createWorkoutLogSchema.extend({
+    exerciseLogs: z.array(
         z.object({
-            weight: z.number(),
-            repetition: z.number(),
-            completed: z.boolean(),
+            exerciseId: z.number(),
+            setLogs: z.array(
+                z.object({
+                    completed: z.boolean(),
+                    weight: z.number(),
+                    repetition: z.number(),
+                }),
+            ),
         }),
     ),
-});
-
-const WorkoutLogsWithCompletedSchema = z.object({
-    workoutId: z.number().int().positive().min(1),
-    loggedAt: z.string(),
-    exerciseLogs: z.array(exerciseLogSchema),
 });
 
 type WorkoutLogsWithCompleted = z.infer<typeof WorkoutLogsWithCompletedSchema>;

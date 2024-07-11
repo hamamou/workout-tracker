@@ -41,7 +41,7 @@ export const workoutsRoutes = new Hono()
         await db.transaction(async (tx) => {
             workout = await tx
                 .insert(workoutsTable)
-                .values({...createWorkoutData, userId: c.var.user.id})
+                .values({...createWorkoutData, lastLoggedAt: '', userId: c.var.user.id})
                 .returning();
 
             const insertedWorkout = workout[0];
@@ -59,6 +59,11 @@ export const workoutsRoutes = new Hono()
                         .returning();
                 }
             }
+
+            await tx
+                .update(workoutsTable)
+                .set({lastLoggedAt: new Date().toString()})
+                .where(eq(workoutsTable.id, insertedWorkout.id));
         });
 
         return c.json({workout}, 201);

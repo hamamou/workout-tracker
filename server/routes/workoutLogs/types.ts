@@ -1,6 +1,6 @@
 import {z} from 'zod';
 
-const exerciseLogSchema = z.object({
+export const exerciseLogSchema = z.object({
     exerciseId: z.number(),
     setLogs: z.array(
         z.object({
@@ -12,7 +12,7 @@ const exerciseLogSchema = z.object({
 
 export type ExerciseLog = z.infer<typeof exerciseLogSchema>;
 
-const workoutLogSchema = z.object({
+export const workoutLogSchema = z.object({
     id: z.number().int().positive().min(1),
     name: z.string().optional(),
     workoutId: z.number().int().positive().min(1),
