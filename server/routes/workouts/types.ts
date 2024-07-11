@@ -3,8 +3,8 @@ import {z} from 'zod';
 const workoutSchema = z.object({
     id: z.number().int().positive().min(1),
     name: z.string().min(3),
-    description: z.string().nullable(),
-    lastLoggedAt: z.string().nullable(),
+    description: z.string().optional(),
+    lastLoggedAt: z.string().optional(),
     userId: z.string(),
     exerciseSets: z
         .array(

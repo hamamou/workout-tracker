@@ -20,6 +20,9 @@ importers:
       drizzle-orm:
         specifier: ^0.31.4
         version: 0.31.4(postgres@3.4.4)
+      drizzle-zod:
+        specifier: ^0.5.1
+        version: 0.5.1(drizzle-orm@0.31.4(postgres@3.4.4))(zod@3.23.8)
       hono:
         specifier: ^4.4.12
         version: 4.4.12
@@ -580,6 +583,12 @@ packages:
       sqlite3:
         optional: true
 
+  drizzle-zod@0.5.1:
+    resolution: {integrity: sha512-C/8bvzUH/zSnVfwdSibOgFjLhtDtbKYmkbPbUCq46QZyZCH6kODIMSOgZ8R7rVjoI+tCj3k06MRJMDqsIeoS4A==}
+    peerDependencies:
+      drizzle-orm: '>=0.23.13'
+      zod: '*'
+
   esbuild-register@3.5.0:
     resolution: {integrity: sha512-+4G/XmakeBAsvJuDugJvtyF1x+XJT4FMocynNpxrvEBViirpfUn2PgNpCHedfWhF4WokNsO/OvMKrmJOIJsI5A==}
     peerDependencies:
@@ -900,6 +909,11 @@ snapshots:
   drizzle-orm@0.31.4(postgres@3.4.4):
     optionalDependencies:
       postgres: 3.4.4
+
+  drizzle-zod@0.5.1(drizzle-orm@0.31.4(postgres@3.4.4))(zod@3.23.8):
+    dependencies:
+      drizzle-orm: 0.31.4(postgres@3.4.4)
+      zod: 3.23.8
 
   esbuild-register@3.5.0(esbuild@0.19.12):
     dependencies:

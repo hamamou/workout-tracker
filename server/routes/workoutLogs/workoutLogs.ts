@@ -8,7 +8,7 @@ import {
     workoutLogs as workoutLogsTable,
 } from '../../db/schema/workoutLogs';
 import {getUser} from '../../kinde';
-import {createWorkoutLogSchema} from './types';
+import {insertWorkoutLogsSchema} from '../../types/workoutLog';
 
 export const workoutLogsRoutes = new Hono()
     .get('/', getUser, async (c) => {
@@ -40,20 +40,18 @@ export const workoutLogsRoutes = new Hono()
         }
         return c.json(workoutLog);
     })
-    .post('/', getUser, zValidator('json', createWorkoutLogSchema), async (c) => {
-        const createWorkoutLog = c.req.valid('json');
-
-        console.log(createWorkoutLog);
+    .post('/', getUser, zValidator('json', insertWorkoutLogsSchema), async (c) => {
+        const validWorkout = insertWorkoutLogsSchema.parse(c.req.valid('json'));
 
         let workoutLog;
         await db.transaction(async (tx) => {
             workoutLog = await tx
                 .insert(workoutLogsTable)
-                .values({...createWorkoutLog, userId: c.var.user.id, loggedAt: new Date().toString()})
+                .values({...validWorkout, userId: c.var.user.id, loggedAt: new Date().toString()})
                 .returning();
 
             const insertedWorkout = workoutLog[0];
-            for (const exerciseSet of createWorkoutLog.exerciseLogs) {
+            for (const exerciseSet of validWorkout.exerciseLogs) {
                 const exercisesSets = await tx
                     .insert(exerciseLogsTable)
                     .values({workoutLogId: insertedWorkout.id, exerciseId: exerciseSet.exerciseId})

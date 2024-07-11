@@ -1,12 +1,12 @@
 import {Button, Checkbox, Group, NumberInput, Stack, Table, Text} from '@mantine/core';
 import {useForm} from '@mantine/form';
-import {createWorkoutLogSchema, type ExerciseLog} from '@server/routes/workoutLogs/types';
 import {type Workout} from '@server/routes/workouts/types';
+import {insertExerciseLogsCustom, insertWorkoutLogsSchema} from '@server/types/workoutLog';
 import {FaRegSave} from 'react-icons/fa';
 import {z} from 'zod';
 import {useCreateWorkoutLog} from './hooks/useCreateWorkoutLog';
 
-const WorkoutLogsWithCompletedSchema = createWorkoutLogSchema.extend({
+const WorkoutLogsWithCompletedSchema = insertWorkoutLogsSchema.extend({
     exerciseLogs: z.array(
         z.object({
             exerciseId: z.number(),
@@ -28,7 +28,8 @@ export const WorkoutLogs = ({workout}: {workout: Workout}) => {
     const form = useForm<WorkoutLogsWithCompleted>({
         initialValues: {
             workoutId: workout.id,
-            loggedAt: new Date().toString(),
+            loggedAt: new Date().toISOString(),
+            name: '',
             exerciseLogs:
                 workout.exerciseSets?.map((exerciseSet) => ({
                     exerciseId: exerciseSet.exerciseId,
@@ -53,7 +54,7 @@ export const WorkoutLogs = ({workout}: {workout: Workout}) => {
             .filter((exerciseLog) => exerciseLog.setLogs.length > 0);
     };
 
-    const rows = (field: ExerciseLog, index: number) => {
+    const rows = (field: insertExerciseLogsCustom, index: number) => {
         return field.setLogs.map((_set, setIndex) => (
             <Table.Tr key={setIndex}>
                 <Table.Td>
@@ -91,7 +92,7 @@ export const WorkoutLogs = ({workout}: {workout: Workout}) => {
             onSubmit={form.onSubmit((values) => {
                 const exerciseLogs = removeEmptyExerciseLogs(values);
 
-                const updatedValues = {...values, exerciseLogs: exerciseLogs};
+                const updatedValues = {...values, exerciseLogs: exerciseLogs, name: values.name || workout.name};
                 console.log(updatedValues);
 
                 mutation.mutate(updatedValues);
