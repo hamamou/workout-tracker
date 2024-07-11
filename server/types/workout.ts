@@ -36,7 +36,7 @@ export const insertWorkoutSchema = createInsertSchema(workouts, {name: z.string(
     .extend({
         exerciseSets: z.array(insertExerciseSetSchemaCustom).nonempty({message: 'Add at least one exercise'}),
     })
-    .omit({userId: true});
+    .omit({userId: true, createdAt: true, lastLoggedAt: true});
 
 export const selectWorkoutSchema = createSelectSchema(workouts)
     .extend({

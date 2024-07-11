@@ -41,7 +41,7 @@ export const workoutsRoutes = new Hono()
         await db.transaction(async (tx) => {
             workout = await tx
                 .insert(workoutsTable)
-                .values({...validWorkout, userId: c.var.user.id})
+                .values({...validWorkout, createdAt: new Date(), userId: c.var.user.id})
                 .returning();
 
             const insertedWorkout = workout[0];

@@ -9,7 +9,19 @@ import {WorkoutLogByWorkoutIdModal} from '../workoutLog/WorkoutLogByWorkoutIdMod
 import {useDeleteWorkout} from './hooks/useDeleteWorkout';
 import {ViewWorkoutModal} from './ViewWorkoutModal';
 
-export const WorkoutCard = ({workout}: {workout: Omit<selectWorkout, 'exerciseSets'>}) => {
+type WorkoutCardProps = Omit<
+    selectWorkout,
+    | {
+          [K in keyof selectWorkout]: selectWorkout[K] extends Date | null ? K : never;
+      }[keyof selectWorkout]
+    | 'exerciseSets'
+> & {
+    [K in keyof selectWorkout as selectWorkout[K] extends Date | null ? K : never]: selectWorkout[K] extends Date | null
+        ? string | null
+        : selectWorkout[K];
+};
+
+export const WorkoutCard = ({workout}: {workout: WorkoutCardProps}) => {
     const [openedViewLogs, {close: closeViewLogs, open: openViewLogs}] = useDisclosure(false);
     const [openedWorkout, {close: closeWorkout, open: openWorkout}] = useDisclosure(false);
     const deleteWorkout = useDeleteWorkout(workout.id!);

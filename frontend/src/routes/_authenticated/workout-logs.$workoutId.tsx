@@ -12,7 +12,16 @@ const Component = () => {
     return (
         <Center>
             {isLoading ? <Loader /> : null}
-            <WorkoutLogs workout={data.workout} />
+            <WorkoutLogs
+                workout={{
+                    id: data.workout.id,
+                    description: data.workout.description,
+                    name: data.workout.name,
+                    exerciseSets: data.workout.exerciseSets,
+                    lastLoggedAt: data.workout.lastLoggedAt ? new Date(data.workout.lastLoggedAt) : new Date(),
+                    createdAt: new Date(data.workout.createdAt),
+                }}
+            />
         </Center>
     );
 };

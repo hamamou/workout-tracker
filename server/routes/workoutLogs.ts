@@ -41,13 +41,13 @@ export const workoutLogsRoutes = new Hono()
         return c.json(workoutLog);
     })
     .post('/', getUser, zValidator('json', insertWorkoutLogsSchema), async (c) => {
-        const validWorkout = insertWorkoutLogsSchema.parse(c.req.valid('json'));
+        const validWorkout = c.req.valid('json');
 
         let workoutLog;
         await db.transaction(async (tx) => {
             workoutLog = await tx
                 .insert(workoutLogsTable)
-                .values({...validWorkout, userId: c.var.user.id})
+                .values({...validWorkout, loggedAt: new Date(), userId: c.var.user.id})
                 .returning();
 
             const insertedWorkout = workoutLog[0];

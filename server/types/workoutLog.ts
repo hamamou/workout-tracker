@@ -29,7 +29,7 @@ export const insertWorkoutLogsSchema = createInsertSchema(workoutLogs, {name: z.
     .extend({
         exerciseLogs: z.array(insertExerciseLogsSchemaCustom),
     })
-    .omit({userId: true});
+    .omit({userId: true, loggedAt: true});
 
 export const selectWorkoutLogsSchema = createSelectSchema(workoutLogs)
     .extend({

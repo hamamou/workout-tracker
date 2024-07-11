@@ -1,4 +1,4 @@
-import {Loader, Modal, Stack, Table, Text} from '@mantine/core';
+import {Group, Loader, Modal, Stack, Table, Text} from '@mantine/core';
 import {insertExerciseSetCustom} from '@server/types/workout';
 import {useGetWorkoutById} from './hooks/useGetWorkoutById';
 
@@ -34,10 +34,21 @@ export const ViewWorkoutModal = ({
 
     if (!data) return null;
     return (
-        <Modal opened={opened} onClose={close} title={data.workout.name}>
+        <Modal
+            opened={opened}
+            onClose={close}
+            title={
+                <Group>
+                    <Text>{data.workout.name}</Text>
+                    <Text mt={2} size="xs">
+                        {data.workout.description}
+                    </Text>
+                </Group>
+            }>
             <Modal.Body>
                 <Stack>
                     {isLoading && <Loader />}
+
                     {data.workout.exerciseSets?.map((exerciseSet, index) => (
                         <Stack key={index}>
                             <Text fw="bold">{exerciseSet.name}</Text>
