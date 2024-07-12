@@ -1,6 +1,5 @@
-import {Button, Card, Group, Menu, Stack, Text, rem} from '@mantine/core';
+import {Button, Card, Group, Loader, Menu, Stack, Text, rem} from '@mantine/core';
 import {useDisclosure} from '@mantine/hooks';
-import {notifications} from '@mantine/notifications';
 import {selectWorkout} from '@server/types/workout';
 import {Link} from '@tanstack/react-router';
 import {FaMagnifyingGlass} from 'react-icons/fa6';
@@ -25,46 +24,46 @@ type WorkoutCardProps = Omit<
 export const WorkoutCard = ({workout}: {workout: WorkoutCardProps}) => {
     const [openedViewLogs, {close: closeViewLogs, open: openViewLogs}] = useDisclosure(false);
     const [openedWorkout, {close: closeWorkout, open: openWorkout}] = useDisclosure(false);
-    const deleteWorkout = useDeleteWorkout(workout.id!);
+    const {mutateAsync: deleteMutation, isPending} = useDeleteWorkout(workout.id);
 
     return (
         <Card shadow="sm" radius="md" withBorder>
             <Stack h="100%" justify="space-between" gap={0}>
                 <Group justify="space-between" mb="xs">
                     <Text fw={500}>{workout.name}</Text>
-                    <Menu shadow="md" width={200}>
-                        <Menu.Target>
-                            <div>
-                                <HiOutlineDotsVertical size={15} className="cursor-pointer" />
-                            </div>
-                        </Menu.Target>
-                        <Menu.Dropdown>
-                            <Menu.Label>Application</Menu.Label>
-                            <Menu.Item
-                                leftSection={<FaMagnifyingGlass style={{width: rem(14), height: rem(14)}} />}
-                                onClick={openWorkout}>
-                                View workout
-                            </Menu.Item>
-                            <Menu.Item
-                                leftSection={<FaMagnifyingGlass style={{width: rem(14), height: rem(14)}} />}
-                                onClick={openViewLogs}>
-                                View logs
-                            </Menu.Item>
-                            <Menu.Divider />
-                            <Menu.Item
-                                color="red"
-                                leftSection={<RxCross2 style={{width: rem(14), height: rem(14)}} />}
-                                onClick={async () => {
-                                    await deleteWorkout.mutateAsync();
-                                    notifications.show({
-                                        title: `Workout ${workout.name} deleted`,
-                                        message: '',
-                                    });
-                                }}>
-                                Remove workout
-                            </Menu.Item>
-                        </Menu.Dropdown>
-                    </Menu>
+                    {!isPending ? (
+                        <Menu shadow="md" width={200}>
+                            <Menu.Target>
+                                <div>
+                                    <HiOutlineDotsVertical size={15} className="cursor-pointer" />
+                                </div>
+                            </Menu.Target>
+                            <Menu.Dropdown>
+                                <Menu.Label>Application</Menu.Label>
+                                <Menu.Item
+                                    leftSection={<FaMagnifyingGlass style={{width: rem(14), height: rem(14)}} />}
+                                    onClick={openWorkout}>
+                                    View workout
+                                </Menu.Item>
+                                <Menu.Item
+                                    leftSection={<FaMagnifyingGlass style={{width: rem(14), height: rem(14)}} />}
+                                    onClick={openViewLogs}>
+                                    View logs
+                                </Menu.Item>
+                                <Menu.Divider />
+                                <Menu.Item
+                                    color="red"
+                                    leftSection={<RxCross2 style={{width: rem(14), height: rem(14)}} />}
+                                    onClick={async () => {
+                                        await deleteMutation();
+                                    }}>
+                                    Remove workout
+                                </Menu.Item>
+                            </Menu.Dropdown>
+                        </Menu>
+                    ) : (
+                        <Loader size={24} />
+                    )}
                 </Group>
                 <Text size="sm" c="dimmed" truncate="end" mb="sm">
                     {workout.description}
