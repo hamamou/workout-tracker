@@ -36,7 +36,6 @@ export const workoutsRoutes = new Hono()
         return c.json({workout});
     })
     .post('/', getUser, zValidator('json', insertWorkoutSchema), async (c) => {
-        await new Promise((resolve) => setTimeout(resolve, 5000));
         const validWorkout = insertWorkoutSchema.parse(c.req.valid('json'));
         let workout: selectBasicWorkout = {} as selectBasicWorkout;
 

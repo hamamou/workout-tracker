@@ -1,5 +1,6 @@
 import {Button, Card, Group, Menu, Stack, Text, rem} from '@mantine/core';
 import {useDisclosure} from '@mantine/hooks';
+import {notifications} from '@mantine/notifications';
 import {selectWorkout} from '@server/types/workout';
 import {Link} from '@tanstack/react-router';
 import {FaMagnifyingGlass} from 'react-icons/fa6';
@@ -55,6 +56,10 @@ export const WorkoutCard = ({workout}: {workout: WorkoutCardProps}) => {
                                 leftSection={<RxCross2 style={{width: rem(14), height: rem(14)}} />}
                                 onClick={async () => {
                                     await deleteWorkout.mutateAsync();
+                                    notifications.show({
+                                        title: `Workout ${workout.name} deleted`,
+                                        message: '',
+                                    });
                                 }}>
                                 Remove workout
                             </Menu.Item>

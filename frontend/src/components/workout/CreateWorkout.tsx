@@ -1,9 +1,11 @@
 import {Button, Divider, Group, Modal, Stack, TextInput} from '@mantine/core';
 import {useForm, zodResolver} from '@mantine/form';
+import {notifications} from '@mantine/notifications';
 import {insertWorkout, insertWorkoutSchema} from '@server/types/workout';
 import {useQueryClient} from '@tanstack/react-query';
 import {MdOutlineCreate} from 'react-icons/md';
 import {getWorkoutsQueryConfig, loadingCreateWorkoutQueryConfig} from '../../lib/workout/getWorkoutsQueryConfig';
+import classes from './CreateWorkout.module.css';
 import {CreateWorkoutExercise} from './CreateWorkoutExercise';
 import {createWorkout, useCreateWorkout} from './hooks/useCreateWorkout';
 
@@ -42,7 +44,17 @@ export const CreateWorkoutModal = ({opened, close}: {opened: boolean; close: () 
                         queryClient.setQueryData(getWorkoutsQueryConfig.queryKey, () => ({
                             workouts: [newWorkout, ...existingWorkouts.workouts],
                         }));
+                        notifications.show({
+                            title: `Workout ${newWorkout.name} created`,
+                            message: '',
+                        });
                     } catch (error) {
+                        notifications.show({
+                            title: 'Error',
+                            message: 'Failed to create new workout',
+                            color: 'red',
+                            classNames: classes,
+                        });
                     } finally {
                         queryClient.setQueryData(loadingCreateWorkoutQueryConfig.queryKey, {});
                     }

@@ -108,12 +108,7 @@ export const CreateWorkoutExercise = ({
     );
     return (
         <>
-            <Text>
-                Exercises
-                <Text c="red" size="xs">
-                    {form.errors['exerciseSets']}
-                </Text>
-            </Text>
+            <Text>Exercises</Text>
             <Stack>
                 {form.values.exerciseSets.map((field, index) => (
                     <Stack key={index}>
@@ -125,7 +120,6 @@ export const CreateWorkoutExercise = ({
                                         className="grow"
                                         placeholder="Choose exercise"
                                         data={exercises?.map((exercise: Exercise) => exercise.name)}
-                                        // {...form.getInputProps(`exerciseSets.${index}.exerciseId`)}
                                         onChange={(value) => {
                                             if (value) {
                                                 updateExerciseId(value, index);
