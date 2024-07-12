@@ -81,7 +81,12 @@ export const WorkoutCard = ({workout}: {workout: WorkoutCardProps}) => {
             )}
 
             {workout.id && openedViewLogs && (
-                <ViewWorkoutLogByWorkoutIdModal opened={openedViewLogs} workoutId={workout.id} close={closeViewLogs} />
+                <ViewWorkoutLogByWorkoutIdModal
+                    opened={openedViewLogs}
+                    workoutId={workout.id}
+                    workoutName={workout.name}
+                    close={closeViewLogs}
+                />
             )}
         </Card>
     );

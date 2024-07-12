@@ -1,15 +1,15 @@
-FROM node:latest as base
+FROM node:latest 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
 WORKDIR /app
 
-FROM base as build
 COPY --link . .
 RUN pnpm install
 
 WORKDIR /app/frontend
+RUN rm -rf node_modules
 RUN pnpm install -P false
 RUN pnpm run build
 

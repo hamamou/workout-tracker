@@ -4,10 +4,12 @@ import {useGetWorkoutLogsByWorkoutId} from './hooks/useGetWorkoutLogsByWorkoutId
 
 export const ViewWorkoutLogByWorkoutIdModal = ({
     workoutId,
+    workoutName,
     opened,
     close,
 }: {
     workoutId: number;
+    workoutName: string;
     opened: boolean;
     close: () => void;
 }) => {
@@ -23,7 +25,7 @@ export const ViewWorkoutLogByWorkoutIdModal = ({
     }, [workoutLogsByWorkoutIdQuery.data]);
 
     return (
-        <Modal opened={opened} onClose={close} title="Logs">
+        <Modal opened={opened} onClose={close} title={`Logs for ${workoutName}`}>
             <Modal.Body>
                 <Center>
                     {workoutLogsByWorkoutIdQuery.isLoading ? (

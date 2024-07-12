@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS "workouts" (
 	"description" text,
 	"last_logged_at" date,
 	"user_id" text NOT NULL,
-	"created_at" date DEFAULT now() NOT NULL
+	"created_at" date DEFAULT now()
 );
 --> statement-breakpoint
 DO $$ BEGIN

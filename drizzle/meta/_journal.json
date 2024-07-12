@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1720715635072,
-      "tag": "0000_abnormal_sauron",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1720748025989,
-      "tag": "0001_clear_la_nuit",
+      "when": 1720750305718,
+      "tag": "0000_pale_jack_murdock",
       "breakpoints": true
     }
   ]

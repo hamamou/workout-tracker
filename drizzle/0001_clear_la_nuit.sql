@@ -1,1 +1,0 @@
-ALTER TABLE "workouts" ALTER COLUMN "created_at" DROP NOT NULL;
